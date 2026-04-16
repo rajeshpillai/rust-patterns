@@ -1,0 +1,19 @@
+%% The Expression Problem — adding new TYPES is easy one way,
+%% adding new OPERATIONS is easy the other. Visitor and enum+match
+%% pick opposite sides.
+flowchart TB
+    subgraph Enum["enum + match (Rust default)"]
+        E1["add a new Visitor (operation)"]
+        E1 --> E1ok["✅ just write a new function"]
+        E2["add a new Element (type)"]
+        E2 --> E2bad["⚠️ touch EVERY match in codebase"]
+    end
+    subgraph Visitor["trait Visitor (GoF default)"]
+        V1["add a new Element (type)"]
+        V1 --> V1bad["⚠️ touch EVERY Visitor impl"]
+        V2["add a new Visitor (operation)"]
+        V2 --> V2ok["✅ just write a new impl"]
+    end
+
+    note1["Enum: types closed, operations open.<br/>Visitor: types open, operations closed.<br/>Pick by what you'll add more often."]
+    V1 -.-> note1

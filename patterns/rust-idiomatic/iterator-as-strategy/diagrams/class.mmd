@@ -1,0 +1,30 @@
+%% Iterator adapters are Strategies parameterized by the step
+%% function. Each adapter takes a closure (the strategy) and returns
+%% a new iterator whose behavior is "apply the strategy per item".
+classDiagram
+    class Iterator~Item~ {
+        <<trait>>
+        +next(&mut self) Option~Item~
+    }
+    class Map~I, F~ {
+        -iter: I
+        -f: F
+        +next() Option~Item~
+    }
+    class Filter~I, P~ {
+        -iter: I
+        -pred: P
+    }
+    class Fold {
+        +fold(init, F) Acc
+    }
+    class Strategy {
+        <<concept>>
+        The CLOSURE is the strategy.
+    }
+
+    Iterator <|.. Map
+    Iterator <|.. Filter
+    Map --> Strategy : f: FnMut(Item) -&gt; T
+    Filter --> Strategy : pred: FnMut(&amp;Item) -&gt; bool
+    Fold --> Strategy : f: FnMut(Acc, Item) -&gt; Acc

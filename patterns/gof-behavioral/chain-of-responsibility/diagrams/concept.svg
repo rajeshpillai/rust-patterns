@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .layer  { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .svc    { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow  { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .ret    { stroke: #166534; stroke-width: 1.8; fill: none; marker-end: url(#b); stroke-dasharray: 4 3; }
+    .label  { font-size: 13px; fill: #111827; }
+    .sub    { font-size: 11px; fill: #374151; }
+    .title  { font-size: 15px; font-weight: 600; fill: #111827; }
+    .mono   { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#166534"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Chain of Responsibility — middleware that wraps the service</text>
+
+  <rect x="20"  y="80" width="120" height="50" rx="8" class="layer"/>
+  <text x="80"  y="100" text-anchor="middle" class="label">Logging</text>
+  <text x="80"  y="118" text-anchor="middle" class="sub">observe in &amp; out</text>
+
+  <rect x="160" y="80" width="120" height="50" rx="8" class="layer"/>
+  <text x="220" y="100" text-anchor="middle" class="label">Auth</text>
+  <text x="220" y="118" text-anchor="middle" class="sub">may short-circuit 401</text>
+
+  <rect x="300" y="80" width="120" height="50" rx="8" class="layer"/>
+  <text x="360" y="100" text-anchor="middle" class="label">RateLimit</text>
+  <text x="360" y="118" text-anchor="middle" class="sub">may short-circuit 429</text>
+
+  <rect x="440" y="80" width="120" height="50" rx="8" class="svc"/>
+  <text x="500" y="100" text-anchor="middle" class="label">Service</text>
+  <text x="500" y="118" text-anchor="middle" class="sub">actual handler</text>
+
+  <path class="arrow" d="M140 100 L160 100"/>
+  <path class="arrow" d="M280 100 L300 100"/>
+  <path class="arrow" d="M420 100 L440 100"/>
+
+  <path class="ret" d="M440 125 L140 125"/>
+  <text x="290" y="142" text-anchor="middle" class="sub">response flows back through every layer</text>
+
+  <text x="20"  y="200" class="mono">fn call(req, next) -&gt; Response {</text>
+  <text x="40"  y="216" class="mono">  /* pre — observe / short-circuit */</text>
+  <text x="40"  y="232" class="mono">  let resp = next.call(req)?;</text>
+  <text x="40"  y="248" class="mono">  /* post — observe / transform */</text>
+  <text x="40"  y="264" class="mono">  Ok(resp)</text>
+</svg>

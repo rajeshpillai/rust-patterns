@@ -1,0 +1,25 @@
+%% Classical GoF Chain of Responsibility — a linked list of handlers,
+%% each deciding whether to handle the request or pass it along.
+%% Rust's idiom is a vector of handlers (or a nested function chain
+%% via the Tower/axum Layer pattern).
+classDiagram
+    class Handler {
+        <<trait>>
+        +handle(req, next) Response
+    }
+    class AuthLayer
+    class LoggingLayer
+    class RateLimit
+    class Service {
+        +call(req) Response
+    }
+
+    Handler <|.. AuthLayer
+    Handler <|.. LoggingLayer
+    Handler <|.. RateLimit
+
+    AuthLayer --> LoggingLayer : next
+    LoggingLayer --> RateLimit : next
+    RateLimit --> Service : next
+
+    note for Handler "Each handler decides:\n1) observe the request,\n2) call next.handle(req),\n3) observe the response,\n4) decide whether to short-circuit\n   (e.g., AuthLayer returns 401)."

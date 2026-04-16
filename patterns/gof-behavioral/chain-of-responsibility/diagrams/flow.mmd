@@ -1,0 +1,30 @@
+%% Middleware chain — a request passes through each handler on the
+%% way in and each response on the way out. Any handler can
+%% short-circuit by not calling `next`.
+sequenceDiagram
+    participant Client
+    participant L as Logging
+    participant A as Auth
+    participant R as RateLimit
+    participant S as Service
+
+    Client->>L: call(req)
+    L->>A: next.call(req)
+    alt auth fails
+        A-->>L: Err(401)
+        Note right of A: short-circuit
+        L-->>Client: Err(401) + log
+    else auth ok
+        A->>R: next.call(req)
+        alt rate exceeded
+            R-->>A: Err(429)
+            A-->>L: Err(429)
+            L-->>Client: Err(429) + log
+        else rate ok
+            R->>S: next.call(req)
+            S-->>R: Ok(resp)
+            R-->>A: Ok(resp)
+            A-->>L: Ok(resp)
+            L-->>Client: Ok(resp) + log
+        end
+    end

@@ -1,0 +1,13 @@
+%% Each adapter takes a closure (strategy) and wraps the previous
+%% iterator. The whole pipeline is lazy until a consumer pulls.
+flowchart LR
+    Src[0..u64] --> M[".map(|n| n * n)"]
+    M --> F[".filter(|&sq| sq % 2 == 0)"]
+    F --> T[".take_while(|&sq| sq &lt; 1000)"]
+    T --> C{consumer}
+    C -->|.sum::&lt;u64&gt;()| Sum[u64]
+    C -->|.collect()| Vec[Vec&lt;u64&gt;]
+    C -->|.find(pred)| Opt[Option&lt;u64&gt;]
+
+    note1["map's strategy: the mapping fn<br/>filter's strategy: the predicate<br/>take_while's strategy: the stop predicate<br/>each closure is a one-line Strategy"]
+    T -.-> note1

@@ -1,0 +1,29 @@
+%% Classical GoF Visitor — every concrete Element exposes an `accept`
+%% method that dispatches to the Visitor's visit_<ElementType>.
+%% This is "double dispatch": the element type + the visitor type
+%% together determine which code runs.
+classDiagram
+    class Visitor {
+        <<interface>>
+        +visit_number(Number)
+        +visit_add(Add)
+        +visit_var(Var)
+    }
+    class Element {
+        <<interface>>
+        +accept(Visitor)
+    }
+    class Number
+    class Add
+    class Var
+    class Printer
+    class Evaluator
+
+    Element <|.. Number
+    Element <|.. Add
+    Element <|.. Var
+    Visitor <|.. Printer
+    Visitor <|.. Evaluator
+    Element ..> Visitor : accept(v) → v.visit_X(self)
+
+    note for Visitor "In Rust: `match` on an enum Expr\nis the Visitor pattern.\nThe trait-based form is needed only\nwhen you must add new visitors\nfrom downstream crates without\ntouching the element types."

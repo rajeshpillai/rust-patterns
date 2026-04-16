@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .src    { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+    .adapt  { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .cons   { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow  { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label  { font-size: 13px; fill: #111827; }
+    .sub    { font-size: 11px; fill: #374151; }
+    .title  { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis   { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono   { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+    .good   { font-size: 11px; fill: #166534; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Iterator as Strategy — each adapter's closure IS the strategy</text>
+
+  <rect x="20"  y="70" width="130" height="60" rx="8" class="src"/>
+  <text x="85"  y="98"  text-anchor="middle" class="mono">vec![1,2,3,4,5]</text>
+  <text x="85"  y="116" text-anchor="middle" class="sub">source</text>
+
+  <path class="arrow" d="M150 100 L200 100"/>
+
+  <rect x="200" y="70" width="150" height="60" rx="8" class="adapt"/>
+  <text x="275" y="98"  text-anchor="middle" class="mono">.map(|x| x * x)</text>
+  <text x="275" y="116" text-anchor="middle" class="sub">strategy: squaring</text>
+
+  <path class="arrow" d="M350 100 L400 100"/>
+
+  <rect x="400" y="70" width="170" height="60" rx="8" class="adapt"/>
+  <text x="485" y="98"  text-anchor="middle" class="mono">.filter(|&amp;n| n &gt; 4)</text>
+  <text x="485" y="116" text-anchor="middle" class="sub">strategy: predicate</text>
+
+  <path class="arrow" d="M570 100 L620 100"/>
+
+  <rect x="620" y="70" width="80" height="60" rx="8" class="cons"/>
+  <text x="660" y="98"  text-anchor="middle" class="mono">.sum()</text>
+  <text x="660" y="116" text-anchor="middle" class="sub">consumer</text>
+
+  <rect x="20"  y="170" width="680" height="110" rx="8" class="cons"/>
+  <text x="40"  y="195" class="mono">sort_by(comparator)     // Strategy: comparator</text>
+  <text x="40"  y="215" class="mono">fold(init, step)        // Strategy: fold step</text>
+  <text x="40"  y="235" class="mono">filter(predicate)       // Strategy: predicate</text>
+  <text x="40"  y="255" class="mono">scan(state, stepper)    // Strategy: stateful transformation</text>
+  <text x="40"  y="275" class="good">every adapter takes ONE closure — one Strategy — and returns a new Iterator</text>
+</svg>
