@@ -2,9 +2,10 @@ import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 import tailwind from '@tailwindcss/vite';
 
-// Set VITE_BASE="/your-repo-name/" for a project-site deploy, or leave
-// unset for user/organization sites (served from the root).
-const base = process.env.VITE_BASE ?? '/';
+// When deploying to GitHub Pages as a project site, the site is served
+// under /<repo-name>/. The deploy script sets GITHUB_PAGES=true.
+// Local dev keeps the root base so the dev server works unchanged.
+const base = process.env.GITHUB_PAGES === 'true' ? '/rust-patterns/' : '/';
 
 export default defineConfig({
   base,
