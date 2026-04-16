@@ -1,0 +1,10 @@
+%% The `?` operator's desugaring — what actually happens when you
+%% write `let x = may_fail()?;`.
+flowchart TD
+    Call["let x = may_fail()?;"] --> Match{"match may_fail()"}
+    Match -->|"Ok(v)"| Bind["let x = v; continue"]
+    Match -->|"Err(e)"| Convert["convert via From&lt;InnerErr&gt; for OuterErr"]
+    Convert --> Return["return Err(converted)"]
+
+    note1["? is syntactic sugar for<br/>match { Ok(v) =&gt; v,<br/>       Err(e) =&gt; return Err(e.into()) }"]
+    Match -.-> note1

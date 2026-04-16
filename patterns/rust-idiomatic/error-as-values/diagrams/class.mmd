@@ -1,0 +1,32 @@
+%% Error-as-Values — errors are ordinary enum values returned through
+%% Result<T, E>. Nothing throws. Every call site sees the failure
+%% modes in the signature.
+classDiagram
+    class Result~T, E~ {
+        <<enum>>
+        +Ok(T)
+        +Err(E)
+        +map(f)
+        +and_then(f)
+        +?  (propagation)
+    }
+    class ConfigError {
+        <<enum>>
+        +Missing(field)
+        +InvalidPort(n)
+        +Io(io::Error)
+    }
+    class Error {
+        <<trait>>
+        +source() Option~&dyn Error~
+    }
+    class Display {
+        <<trait>>
+        +fmt(&mut Formatter)
+    }
+
+    Result --> ConfigError : E
+    ConfigError ..|> Error : impl
+    ConfigError ..|> Display : impl
+
+    note for ConfigError "#[non_exhaustive] so adding\na variant isn't a breaking change.\nImplements Error + Display so the\nerror integrates with anyhow, ?, and\n`Box<dyn Error + Send + Sync>`."

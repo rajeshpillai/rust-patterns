@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .box   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .ok    { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label { font-size: 13px; fill: #111827; }
+    .sub   { font-size: 11px; fill: #374151; }
+    .title { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis  { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono  { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Closure traits — which one do you need?</text>
+
+  <rect x="40" y="60" width="640" height="36" rx="6" class="ok"/>
+  <text x="360" y="82" text-anchor="middle" class="label">Fn  ⊂  FnMut  ⊂  FnOnce   (every Fn is an FnMut, every FnMut is an FnOnce)</text>
+
+  <rect x="40"  y="120" width="200" height="160" rx="8" class="ok"/>
+  <text x="140" y="144" text-anchor="middle" class="label">Fn</text>
+  <text x="140" y="162" text-anchor="middle" class="sub">only reads captures</text>
+  <text x="140" y="180" text-anchor="middle" class="mono">fn m(&amp;self, ...)</text>
+  <text x="140" y="200" text-anchor="middle" class="sub">callable many times</text>
+  <text x="140" y="218" text-anchor="middle" class="sub">shareable across threads*</text>
+  <text x="140" y="240" text-anchor="middle" class="sub">example:</text>
+  <text x="140" y="258" text-anchor="middle" class="mono">|x| x + 1</text>
+
+  <rect x="260" y="120" width="200" height="160" rx="8" class="box"/>
+  <text x="360" y="144" text-anchor="middle" class="label">FnMut</text>
+  <text x="360" y="162" text-anchor="middle" class="sub">mutates captures</text>
+  <text x="360" y="180" text-anchor="middle" class="mono">fn m(&amp;mut self, ...)</text>
+  <text x="360" y="200" text-anchor="middle" class="sub">callable many times</text>
+  <text x="360" y="218" text-anchor="middle" class="sub">exclusive access each call</text>
+  <text x="360" y="240" text-anchor="middle" class="sub">example:</text>
+  <text x="360" y="258" text-anchor="middle" class="mono">|x| { *count += 1; x }</text>
+
+  <rect x="480" y="120" width="200" height="160" rx="8" class="box"/>
+  <text x="580" y="144" text-anchor="middle" class="label">FnOnce</text>
+  <text x="580" y="162" text-anchor="middle" class="sub">consumes captures</text>
+  <text x="580" y="180" text-anchor="middle" class="mono">fn m(self, ...)</text>
+  <text x="580" y="200" text-anchor="middle" class="sub">callable exactly once</text>
+  <text x="580" y="218" text-anchor="middle" class="sub">moves the closure's data</text>
+  <text x="580" y="240" text-anchor="middle" class="sub">example:</text>
+  <text x="580" y="258" text-anchor="middle" class="mono">move || drop(buf)</text>
+
+  <text x="40" y="315" class="sub">Choose the loosest bound the callsite can live with. Fn &lt; FnMut &lt; FnOnce — every caller is happier with Fn.</text>
+  <text x="40" y="330" class="sub">* Fn + Send + Sync to actually share across threads.</text>
+</svg>

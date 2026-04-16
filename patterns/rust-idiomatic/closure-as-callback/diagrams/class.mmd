@@ -1,0 +1,22 @@
+%% The Fn family — closures implement one or more of these traits
+%% depending on what they capture and how they capture it.
+classDiagram
+    class FnOnce {
+        <<trait>>
+        +call_once(self, Args) Output
+    }
+    class FnMut {
+        <<trait>>
+        +call_mut(&mut self, Args) Output
+    }
+    class Fn {
+        <<trait>>
+        +call(&self, Args) Output
+    }
+
+    FnOnce <|-- FnMut : extends
+    FnMut <|-- Fn : extends
+
+    note for FnOnce "Consumes captured values.\nCan only be called once."
+    note for FnMut "Mutates captured values.\nCan be called many times,\nbut borrows &mut self."
+    note for Fn "Only reads captured values.\nCan be called concurrently\nfrom many &self references."

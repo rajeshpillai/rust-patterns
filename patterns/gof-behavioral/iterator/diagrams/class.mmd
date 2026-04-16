@@ -1,0 +1,26 @@
+%% GoF Iterator — a separate object encapsulates traversal state.
+%% Rust's Iterator trait is the same idea, with one method and a
+%% universe of combinators as supertrait + extension trait methods.
+classDiagram
+    class Iterator~Item~ {
+        <<trait>>
+        +next(&mut self) Option~Item~
+        +map(f)
+        +filter(pred)
+        +fold(init, f)
+        +collect()
+        +...
+    }
+    class IntoIterator~Item~ {
+        <<trait>>
+        +into_iter(self) Iter
+    }
+    class Vec~T~
+    class Range~T~
+    class HashMap~K, V~
+
+    Vec     ..|> IntoIterator
+    Range   ..|> Iterator
+    HashMap ..|> IntoIterator
+
+    note for Iterator "Implement ONE method (next).\nGet fifty combinators for free\n(map, filter, fold, flat_map,\nchain, zip, enumerate, take, skip,\ncollect, sum, product, count,\nfind, all, any, ...)."
