@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .node   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .leaf   { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .edge   { stroke: #374151; stroke-width: 1.5; fill: none; }
+    .label  { font-size: 13px; fill: #111827; }
+    .sub    { font-size: 11px; fill: #374151; }
+    .title  { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis   { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono   { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+    .good   { font-size: 11px; fill: #166534; font-style: italic; }
+  </style>
+
+  <text x="20" y="26" class="title">Interpreter — tree-walking an AST via recursive `match`</text>
+
+  <rect x="320" y="60" width="80" height="40" rx="6" class="node"/>
+  <text x="360" y="86" text-anchor="middle" class="label">Mul</text>
+
+  <rect x="220" y="130" width="80" height="40" rx="6" class="node"/>
+  <text x="260" y="156" text-anchor="middle" class="label">Add</text>
+
+  <rect x="420" y="130" width="80" height="40" rx="6" class="leaf"/>
+  <text x="460" y="156" text-anchor="middle" class="label">Num 5</text>
+
+  <rect x="140" y="200" width="80" height="40" rx="6" class="leaf"/>
+  <text x="180" y="226" text-anchor="middle" class="label">Var x</text>
+
+  <rect x="300" y="200" width="80" height="40" rx="6" class="leaf"/>
+  <text x="340" y="226" text-anchor="middle" class="label">Num 2</text>
+
+  <path class="edge" d="M340 100 L260 130"/>
+  <path class="edge" d="M380 100 L460 130"/>
+  <path class="edge" d="M240 170 L180 200"/>
+  <path class="edge" d="M280 170 L340 200"/>
+
+  <rect x="20" y="260" width="680" height="50" rx="8" class="node" fill="white" stroke="#374151"/>
+  <text x="40"  y="282" class="mono">enum Expr { Num(i64), Var(String), Add(Box&lt;Expr&gt;, Box&lt;Expr&gt;), ... }</text>
+  <text x="40"  y="302" class="good">fn eval(e: &amp;Expr, env: &amp;Env) -&gt; i64 { match e { Add(l,r) =&gt; eval(l) + eval(r), ... } }</text>
+</svg>

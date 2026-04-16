@@ -1,0 +1,11 @@
+%% Evaluation of `(x + 2) * 5` with x = 3:
+%% the tree is walked recursively; each node's value is computed
+%% from its children.
+flowchart TD
+    Root["Mul"] --> L1["Add"]
+    Root --> R1["Num 5"]
+    L1 --> L2["Var x"]
+    L1 --> R2["Num 2"]
+
+    note1["eval(Mul(a,b)) = eval(a) * eval(b)<br/>eval(Add(a,b)) = eval(a) + eval(b)<br/>eval(Var k)    = env[k]<br/>eval(Num n)    = n<br/>result: (3 + 2) * 5 = 25"]
+    Root -.-> note1

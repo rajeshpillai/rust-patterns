@@ -1,0 +1,19 @@
+%% Classical GoF Interpreter — one class per grammar rule, each
+%% implementing interpret(context). Rust's natural shape is an
+%% enum with one variant per grammar rule and a single recursive
+%% eval() function.
+classDiagram
+    class Expr {
+        <<enum>>
+        +Num(i64)
+        +Var(String)
+        +Add(Box~Expr~, Box~Expr~)
+        +Sub(Box~Expr~, Box~Expr~)
+        +Mul(Box~Expr~, Box~Expr~)
+    }
+    class Context {
+        +bindings: HashMap~String, i64~
+    }
+
+    Expr ..> Context : reads variables
+    note for Expr "Grammar rule = enum variant.\nevaluation = match + recurse.\nNo per-rule class; no Visitor."
