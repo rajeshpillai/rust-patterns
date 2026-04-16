@@ -1,0 +1,21 @@
+%% The sealing mechanism: public trait + private super-trait in a
+%% private module. Only code inside the crate can construct types
+%% that satisfy the super-trait, so only code inside the crate can
+%% implement the public trait.
+flowchart TB
+    subgraph crate["your crate"]
+        PrivMod["mod private {<br/>  pub trait Sealed {}<br/>}"]
+        Pub["pub trait Format: private::Sealed { ... }"]
+        ImplA["impl private::Sealed for Json {}<br/>impl Format for Json { ... }"]
+        ImplB["impl private::Sealed for Yaml {}<br/>impl Format for Yaml { ... }"]
+        PrivMod --> Pub
+        Pub --> ImplA
+        Pub --> ImplB
+    end
+
+    subgraph downstream["downstream crate"]
+        Bad["impl Format for MyFormat — ❌<br/>cannot name private::Sealed<br/>to satisfy the super-trait"]
+    end
+
+    ImplA -.-> downstream
+    style Bad fill:#fee2e2,stroke:#991b1b

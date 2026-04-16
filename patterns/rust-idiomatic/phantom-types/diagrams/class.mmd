@@ -1,0 +1,21 @@
+%% PhantomData<T> — use a type parameter without storing a T.
+%% The compiler tracks T for variance, auto-traits, and distinctness;
+%% at runtime, PhantomData<T> is zero-sized.
+classDiagram
+    class Wrapping~Unit~ {
+        -value: u64
+        -_marker: PhantomData~Unit~
+        +new(u64) Wrapping~Unit~
+        +as_u64() u64
+    }
+    class Seconds {
+        <<marker, never constructed>>
+    }
+    class Milliseconds {
+        <<marker, never constructed>>
+    }
+
+    Wrapping --> Seconds : Wrapping&lt;Seconds&gt;
+    Wrapping --> Milliseconds : Wrapping&lt;Milliseconds&gt;
+
+    note for Wrapping "Wrapping<Seconds> and\nWrapping<Milliseconds> are\nDIFFERENT types. Adding them\nis a compile error.\n\nAt runtime both are exactly 8 bytes."

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .box   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .ok    { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label { font-size: 13px; fill: #111827; }
+    .sub   { font-size: 11px; fill: #374151; }
+    .title { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis  { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono  { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+    .good  { font-size: 11px; fill: #166534; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Command — pick the shape by what you need to do with it</text>
+
+  <rect x="20" y="60" width="340" height="110" rx="8" class="ok"/>
+  <text x="190" y="84" text-anchor="middle" class="label">Closure — Box&lt;dyn FnOnce()&gt;</text>
+  <text x="190" y="104" text-anchor="middle" class="sub">simplest · just defer</text>
+  <text x="190" y="124" text-anchor="middle" class="mono">queue: VecDeque&lt;Box&lt;dyn FnOnce()&gt;&gt;</text>
+  <text x="190" y="144" text-anchor="middle" class="sub">cannot undo · cannot serialize · cannot log</text>
+  <text x="190" y="162" text-anchor="middle" class="good">use when you just need to delay work</text>
+
+  <rect x="380" y="60" width="320" height="110" rx="8" class="ok"/>
+  <text x="540" y="84" text-anchor="middle" class="label">Enum — fixed set of commands</text>
+  <text x="540" y="104" text-anchor="middle" class="sub">match per variant</text>
+  <text x="540" y="124" text-anchor="middle" class="mono">enum Cmd { AddLine(...), DeleteLine(...) }</text>
+  <text x="540" y="144" text-anchor="middle" class="sub">inspectable · serializable · loggable</text>
+  <text x="540" y="162" text-anchor="middle" class="good">use when you also need to store/persist them</text>
+
+  <rect x="20" y="196" width="680" height="110" rx="8" class="box"/>
+  <text x="360" y="220" text-anchor="middle" class="label">Trait + Box&lt;dyn Command&gt; — open set</text>
+  <text x="360" y="240" text-anchor="middle" class="mono">trait Command { fn execute(&amp;self, doc: &amp;mut Doc); fn undo(&amp;self, doc: &amp;mut Doc); }</text>
+  <text x="360" y="260" text-anchor="middle" class="sub">downstream code can add commands · vtable per call · needs object-safety</text>
+  <text x="360" y="280" text-anchor="middle" class="good">use when callers plug in their own command types</text>
+</svg>

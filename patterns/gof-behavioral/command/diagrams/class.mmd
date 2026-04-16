@@ -1,0 +1,30 @@
+%% Classical GoF Command — encapsulate a request as an object so it
+%% can be queued, logged, undone, or replayed.
+classDiagram
+    class Command {
+        <<interface>>
+        +execute()
+        +undo()
+    }
+    class AddLine
+    class DeleteLine
+    class SetCursor
+
+    class Invoker {
+        -history: Stack~Command~
+        +submit(Command)
+        +undo()
+    }
+    class Editor {
+        +apply(Command)
+    }
+
+    Invoker --> "*" Command : holds
+    Command <|.. AddLine
+    Command <|.. DeleteLine
+    Command <|.. SetCursor
+    AddLine    --> Editor : invokes
+    DeleteLine --> Editor
+    SetCursor  --> Editor
+
+    note for Command "In Rust: trait + enum + Box<dyn>\nfor introspectable commands,\nor Box<dyn FnOnce()> for one-shot\ndeferred work.\nPick by what you need: replay?\nundo? inspection? just delay?"

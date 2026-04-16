@@ -1,0 +1,27 @@
+%% Undo/redo stacks — the "why Command exists" use case.
+%% Every mutation goes through a Command; undo pops from history,
+%% calls .undo(), pushes onto redo; redo is the mirror.
+sequenceDiagram
+    autonumber
+    participant UI
+    participant Inv as Invoker
+    participant Doc as Editor
+
+    UI->>Inv: submit(AddLine("hello"))
+    Inv->>Doc: cmd.execute(doc)
+    Doc-->>Inv: applied
+    Inv-->>Inv: history.push(cmd)
+
+    UI->>Inv: submit(AddLine("world"))
+    Inv->>Doc: cmd.execute(doc)
+    Inv-->>Inv: history.push(cmd)
+
+    UI->>Inv: undo
+    Inv-->>Inv: cmd = history.pop()
+    Inv->>Doc: cmd.undo(doc)
+    Inv-->>Inv: redo_stack.push(cmd)
+
+    UI->>Inv: redo
+    Inv-->>Inv: cmd = redo_stack.pop()
+    Inv->>Doc: cmd.execute(doc)
+    Inv-->>Inv: history.push(cmd)

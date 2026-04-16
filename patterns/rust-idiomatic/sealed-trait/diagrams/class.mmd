@@ -1,0 +1,27 @@
+%% Sealed Trait — a public trait that only types in your crate can
+%% implement. Achieved by requiring a private super-trait that is
+%% only implemented inside the crate.
+classDiagram
+    class SealedSuper {
+        <<private trait>>
+    }
+    class PublicTrait {
+        <<public trait>>
+        +Sealed required
+        +method1()
+        +method2()
+    }
+    class InternalTypeA {
+        +impl PublicTrait
+    }
+    class InternalTypeB {
+        +impl PublicTrait
+    }
+    class DownstreamType {
+        +impl PublicTrait??
+    }
+
+    PublicTrait --|> SealedSuper : requires
+    InternalTypeA ..|> PublicTrait : ok (crate can impl Sealed)
+    InternalTypeB ..|> PublicTrait : ok
+    DownstreamType ..|> PublicTrait : E0277 — cannot impl Sealed

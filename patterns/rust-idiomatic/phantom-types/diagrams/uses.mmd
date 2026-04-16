@@ -1,0 +1,23 @@
+%% Three canonical uses of PhantomData in Rust libraries.
+flowchart TB
+    subgraph Units["Units of measure"]
+        U1[Wrapping&lt;Seconds&gt;]
+        U2[Wrapping&lt;Milliseconds&gt;]
+        U3[adding them = E0308]
+        U1 --> U3
+        U2 --> U3
+    end
+
+    subgraph State["Typestate markers"]
+        S1[Conn&lt;Disconnected&gt;]
+        S2[Conn&lt;Connected&gt;]
+        S3[.send() only on Connected]
+        S1 --> S2
+        S2 --> S3
+    end
+
+    subgraph Variance["Variance / auto-trait control"]
+        V1[PhantomData&lt;fn() -&gt; T&gt;]
+        V2[covariant in T,<br/>not Send/Sync unless T is]
+        V1 --> V2
+    end
