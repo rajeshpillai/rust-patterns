@@ -1,0 +1,27 @@
+%% Proxy — a surrogate that shares the target's interface and
+%% controls access, lazy-loads, caches, or adds instrumentation.
+%% In Rust: wrap the target in a newtype implementing the same trait.
+classDiagram
+    class Fetcher {
+        <<trait>>
+        +fetch(key) Result~Vec~u8~~
+    }
+    class RealFetcher {
+        +fetch(key) Result~Vec~u8~~
+    }
+    class CachingProxy {
+        -inner: RealFetcher
+        -cache: HashMap~String, Vec~u8~~
+        +fetch(key) Result~Vec~u8~~
+    }
+    class AuthProxy {
+        -inner: &lt;any Fetcher&gt;
+        -token: String
+        +fetch(key) Result~Vec~u8~~
+    }
+
+    Fetcher <|.. RealFetcher
+    Fetcher <|.. CachingProxy
+    Fetcher <|.. AuthProxy
+
+    note for Fetcher "Proxies preserve the interface.\nProxy is to Decorator as\n'gatekeeper' is to 'enhancer':\na proxy MAY refuse or defer.\na decorator always forwards."

@@ -2,8 +2,8 @@
 %% each impl supplies the bodies of those steps.
 sequenceDiagram
     participant Caller
-    participant T as trait DataPipeline::run (default)
-    participant I as impl CsvPipeline
+    participant T as "trait DataPipeline::run (default)"
+    participant I as "impl CsvPipeline"
 
     Caller->>T: run(path)
     T->>I: self.load(path)

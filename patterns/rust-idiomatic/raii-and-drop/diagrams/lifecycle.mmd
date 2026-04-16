@@ -6,7 +6,7 @@ sequenceDiagram
     autonumber
     participant Caller
     participant FH as FileHandle
-    participant OS as OS (fd table)
+    participant OS as "OS (fd table)"
 
     Caller->>FH: FileHandle::open("data.txt")
     FH->>OS: open() -> fd

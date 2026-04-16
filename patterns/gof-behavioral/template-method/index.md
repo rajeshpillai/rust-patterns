@@ -78,7 +78,7 @@ Full code: [`code/idiomatic.rs`](./code/idiomatic.rs).
 ```mermaid
 sequenceDiagram
     participant Caller
-    participant T as trait::run (default)
+    participant T as "trait::run (default)"
     participant I as impl
     Caller->>T: pipeline.run(path)
     T->>I: self.load(path)

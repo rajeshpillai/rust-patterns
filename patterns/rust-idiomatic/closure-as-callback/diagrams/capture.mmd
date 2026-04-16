@@ -1,13 +1,13 @@
 %% How a closure captures drives which Fn* trait it implements.
 flowchart TD
-    Q{What does the closure<br/>do with captured values?}
-    Q -->|only reads them| Fn[Fn<br/>&self · callable many times]
-    Q -->|mutates them| FnMut[FnMut<br/>&mut self · still callable many times]
-    Q -->|consumes them<br/>move + drop| FnOnce[FnOnce<br/>self · callable exactly once]
+    Q{What does the closure do with captured values?}
+    Q -->|only reads them| Fn["Fn — &self, callable many times"]
+    Q -->|mutates them| FnMut["FnMut — &mut self, callable many times"]
+    Q -->|consumes them| FnOnce["FnOnce — self, callable exactly once"]
 
-    Fn -->|add move||Move1[move || reads<br/>still Fn, owns captures]
-    FnMut -->|add move||Move2[move || mutates<br/>still FnMut, owns captures]
-    FnOnce -->|add move||Move3[move || consumes<br/>still FnOnce]
+    Fn --> Move1["move closure still Fn, but owns its captures"]
+    FnMut --> Move2["move closure still FnMut, but owns its captures"]
+    FnOnce --> Move3["move closure still FnOnce"]
 
-    note1[move keyword says 'take ownership of captures'.<br/>It does NOT change which Fn* trait you implement —<br/>it changes WHAT you own.]
+    note1["move keyword: take ownership of captures. It does NOT change which Fn trait you implement — it changes WHAT you own."]
     Move1 -.-> note1

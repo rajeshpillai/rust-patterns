@@ -2,8 +2,8 @@
 %% .into() on any Err it propagates.
 sequenceDiagram
     autonumber
-    participant Caller as outer()
-    participant Inner as inner() -> Result<T, InnerError>
+    participant Caller as "outer()"
+    participant Inner as "inner() -> Result T InnerError"
 
     Caller->>Inner: inner()?
     alt Ok

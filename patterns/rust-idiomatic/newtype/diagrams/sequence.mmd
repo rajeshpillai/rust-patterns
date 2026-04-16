@@ -2,9 +2,9 @@
 %% has already been proven legal by its type.
 sequenceDiagram
     autonumber
-    participant UI as User Input
-    participant Parser as EmailAddress::parse
-    participant Svc as send_welcome(to: EmailAddress)
+    participant UI as "User Input"
+    participant Parser as "EmailAddress::parse"
+    participant Svc as "send_welcome(to: EmailAddress)"
 
     UI->>Parser: "rajesh@example.com"
     alt valid

@@ -11,7 +11,7 @@ flowchart TB
     subgraph State["Typestate markers"]
         S1[Conn&lt;Disconnected&gt;]
         S2[Conn&lt;Connected&gt;]
-        S3[.send() only on Connected]
+        S3[".send() only on Connected"]
         S1 --> S2
         S2 --> S3
     end

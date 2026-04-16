@@ -1,0 +1,18 @@
+%% Four common Proxy flavors, each serving a different intent.
+flowchart LR
+    subgraph Virtual["Virtual (lazy)"]
+        V1[Proxy] -->|first call| VLoad[load real object]
+        V1 -->|later calls| VCache[cached]
+    end
+    subgraph Protection["Protection"]
+        P1[Proxy] -->|token valid| PSvc[real service]
+        P1 -->|token invalid| PErr[401]
+    end
+    subgraph Caching["Caching"]
+        C1[Proxy] -->|hit| CCache[return cached]
+        C1 -->|miss| CReal[real service + cache]
+    end
+    subgraph Smart["Smart reference"]
+        S1[Arc&lt;T&gt;] -->|clone| SBump[bump refcount]
+        S1 -->|drop| SDec[decrement + maybe free]
+    end

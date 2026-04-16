@@ -38,16 +38,16 @@ They look similar. They behave differently enough that picking the wrong one dra
 sequenceDiagram
     autonumber
     participant Caller
-    participant B1 as Builder (fresh)
-    participant B2 as Builder (endpoint set)
-    participant B3 as Builder (timeout set)
+    participant B1 as "Builder fresh"
+    participant B2 as "Builder endpoint set"
+    participant B3 as "Builder timeout set"
     participant C as HttpClient
-    Caller->>B1: HttpClient::builder()
-    Caller->>B2: .endpoint("...")
-    Note right of B2: self moved; Self returned
-    Caller->>B3: .timeout(5s)
-    Caller->>C:  .build()?
-    C-->>Caller: Ok(HttpClient)
+    Caller->>B1: HttpClient::builder
+    Caller->>B2: .endpoint
+    Note right of B2: self moved, Self returned
+    Caller->>B3: .timeout 5s
+    Caller->>C:  .build
+    C-->>Caller: Ok HttpClient
 ```
 
 Full code: [`code/idiomatic.rs`](./code/idiomatic.rs).
