@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .folder { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .file   { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .edge   { stroke: #374151; stroke-width: 1.5; fill: none; }
+    .label  { font-size: 13px; fill: #111827; }
+    .sub    { font-size: 11px; fill: #374151; }
+    .title  { font-size: 15px; font-weight: 600; fill: #111827; }
+    .mono   { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+    .good   { font-size: 11px; fill: #166534; font-style: italic; }
+  </style>
+
+  <text x="20" y="26" class="title">Composite — one enum, two variants, one recursive traversal</text>
+
+  <rect x="300" y="60" width="120" height="50" rx="8" class="folder"/>
+  <text x="360" y="80" text-anchor="middle" class="label">Folder</text>
+  <text x="360" y="100" text-anchor="middle" class="sub">project/</text>
+
+  <path class="edge" d="M360 110 L200 170"/>
+  <path class="edge" d="M360 110 L360 170"/>
+  <path class="edge" d="M360 110 L520 170"/>
+
+  <rect x="140" y="170" width="120" height="50" rx="8" class="folder"/>
+  <text x="200" y="190" text-anchor="middle" class="label">Folder</text>
+  <text x="200" y="210" text-anchor="middle" class="sub">src/</text>
+
+  <rect x="300" y="170" width="120" height="50" rx="8" class="file"/>
+  <text x="360" y="190" text-anchor="middle" class="label">File</text>
+  <text x="360" y="210" text-anchor="middle" class="sub">README.md · 2KB</text>
+
+  <rect x="460" y="170" width="120" height="50" rx="8" class="file"/>
+  <text x="520" y="190" text-anchor="middle" class="label">File</text>
+  <text x="520" y="210" text-anchor="middle" class="sub">Cargo.toml · 1KB</text>
+
+  <path class="edge" d="M200 220 L140 280"/>
+  <path class="edge" d="M200 220 L260 280"/>
+
+  <rect x="80"  y="280" width="120" height="30" rx="6" class="file"/>
+  <text x="140" y="300" text-anchor="middle" class="sub">lib.rs · 5KB</text>
+
+  <rect x="200" y="280" width="120" height="30" rx="6" class="file"/>
+  <text x="260" y="300" text-anchor="middle" class="sub">main.rs · 3KB</text>
+
+  <text x="600" y="80" class="mono">enum Node {</text>
+  <text x="600" y="96" class="mono">  File { ... },</text>
+  <text x="600" y="112" class="mono">  Folder { ... }</text>
+  <text x="600" y="128" class="mono">}</text>
+  <text x="600" y="160" class="good">exhaustive match,</text>
+  <text x="600" y="176" class="good">zero heap per leaf,</text>
+  <text x="600" y="192" class="good">children: Vec&lt;Node&gt;</text>
+</svg>

@@ -1,0 +1,21 @@
+%% Template Method — skeleton algorithm with "hooks" that subclasses
+%% fill in. In Rust: a trait with a default method that calls
+%% abstract trait methods, which the impls override.
+classDiagram
+    class DataPipeline {
+        <<trait>>
+        +run() Result (default)
+        +load(path) Result~Bytes~*
+        +parse(Bytes) Result~Records~*
+        +validate(Records) Result~Records~*
+        +emit(Records) String*
+    }
+    class CsvPipeline
+    class JsonPipeline
+    class TomlPipeline
+
+    DataPipeline <|.. CsvPipeline
+    DataPipeline <|.. JsonPipeline
+    DataPipeline <|.. TomlPipeline
+
+    note for DataPipeline "run() is provided by the trait.\nload / parse / validate / emit are abstract.\nEach impl supplies only the differences."

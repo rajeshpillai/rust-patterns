@@ -1,0 +1,20 @@
+%% Consuming self: ownership moves through the chain. Each setter
+%% receives `self`, returns a new `Self`. The final `.build()` owns
+%% the fully-configured builder.
+sequenceDiagram
+    autonumber
+    participant Caller
+    participant B1 as Builder (fresh)
+    participant B2 as Builder (endpoint set)
+    participant B3 as Builder (timeout set)
+    participant B4 as Builder (retries set)
+    participant C as HttpClient
+
+    Caller->>B1: HttpClient::builder()
+    B1-->>Caller: Builder { all None }
+    Caller->>B2: .endpoint("...")
+    Note right of B2: self is moved; Self returned
+    Caller->>B3: .timeout(5s)
+    Caller->>B4: .retries(3)
+    Caller->>C:  .build()?
+    C-->>Caller: Ok(HttpClient)

@@ -1,0 +1,23 @@
+%% Composite — leaves and containers share an interface; containers
+%% hold a collection of children that can be either leaves or more
+%% containers. Rust's natural shape is a recursive enum.
+classDiagram
+    class Node {
+        <<enum>>
+        +File
+        +Folder
+    }
+    class File {
+        +name: String
+        +bytes: u64
+    }
+    class Folder {
+        +name: String
+        +children: Vec~Node~
+    }
+
+    Node <|-- File
+    Node <|-- Folder
+    Folder o-- Node : children
+
+    note for Node "In Rust: enum Node { File { ... }, Folder { ... } }.\nMethods go on Node with a match\nthat handles both variants —\nexhaustive by construction."

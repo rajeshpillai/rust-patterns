@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .skel   { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+    .hook   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .impl   { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow  { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label  { font-size: 13px; fill: #111827; }
+    .sub    { font-size: 11px; fill: #374151; }
+    .title  { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis   { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono   { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Template Method — fixed skeleton, swappable steps</text>
+
+  <text x="20" y="60" class="axis">TRAIT WITH DEFAULT (the template)</text>
+  <rect x="20" y="80" width="680" height="70" rx="10" class="skel"/>
+  <text x="40"  y="104" class="mono">fn run(&amp;self, path: &amp;str) -&gt; Result&lt;String, Err&gt; {</text>
+  <text x="60"  y="122" class="mono">  let b = self.load(path)?;</text>
+  <text x="240" y="122" class="mono">let r = self.parse(b)?;</text>
+  <text x="420" y="122" class="mono">let r = self.validate(r)?;</text>
+  <text x="60"  y="140" class="mono">  Ok(self.emit(r))</text>
+
+  <text x="20" y="180" class="axis">ABSTRACT STEPS (each impl fills these in)</text>
+
+  <rect x="20"  y="200" width="155" height="100" rx="8" class="hook"/>
+  <text x="97"  y="224" text-anchor="middle" class="mono">fn load(...)</text>
+  <text x="97"  y="244" text-anchor="middle" class="sub">how to fetch bytes</text>
+
+  <rect x="195" y="200" width="155" height="100" rx="8" class="hook"/>
+  <text x="272" y="224" text-anchor="middle" class="mono">fn parse(bytes)</text>
+  <text x="272" y="244" text-anchor="middle" class="sub">bytes -&gt; records</text>
+
+  <rect x="370" y="200" width="155" height="100" rx="8" class="hook"/>
+  <text x="447" y="224" text-anchor="middle" class="mono">fn validate(rs)</text>
+  <text x="447" y="244" text-anchor="middle" class="sub">business rules</text>
+
+  <rect x="545" y="200" width="155" height="100" rx="8" class="hook"/>
+  <text x="622" y="224" text-anchor="middle" class="mono">fn emit(rs)</text>
+  <text x="622" y="244" text-anchor="middle" class="sub">render to string</text>
+
+  <path class="arrow" d="M175 120 L97 200"/>
+  <path class="arrow" d="M340 120 L272 200"/>
+  <path class="arrow" d="M510 120 L447 200"/>
+  <path class="arrow" d="M600 120 L622 200"/>
+</svg>

@@ -1,0 +1,8 @@
+%% Traversal is a recursive `match` on the enum. Every algorithm over
+%% the composite follows the same shape.
+flowchart TD
+    Call[".total_size(&root)"]
+    Call --> Match{match node}
+    Match -->|File { bytes }| Leaf["bytes"]
+    Match -->|Folder { children }| Recurse["children.iter()<br/>.map(total_size)<br/>.sum()"]
+    Recurse --> Call

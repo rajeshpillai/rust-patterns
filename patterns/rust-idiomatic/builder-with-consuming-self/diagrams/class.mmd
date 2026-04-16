@@ -1,0 +1,16 @@
+%% Two signatures for builder setters — same pattern, different
+%% ownership semantics.
+classDiagram
+    class ConsumingBuilder {
+        +endpoint(self, v) Self
+        +timeout(self, v) Self
+        +build(self) Result~T, E~
+    }
+    class MutableRefBuilder {
+        +endpoint(&mut self, v) &mut Self
+        +timeout(&mut self, v) &mut Self
+        +build(&self) Result~T, E~
+    }
+
+    note for ConsumingBuilder "Moves self forward each call.\nChain fluently: one expression.\n.build() is the last word.\nCannot call .build() twice\n(E0382 on reuse)."
+    note for MutableRefBuilder "Keeps the builder binding alive.\nCan branch mid-chain and\ncall .build() multiple times.\n.build() clones out of &self,\nso fields must be Clone."
