@@ -1,0 +1,21 @@
+%% A million Glyph instances; three FontData buffers in the pool.
+%% Every Glyph shares one of the three Arcs.
+flowchart LR
+    subgraph Instances["1,000,000 Glyph instances"]
+        G1[Glyph 1]
+        G2[Glyph 2]
+        G3[Glyph 3]
+        GN[...]
+    end
+    subgraph Pool["3 FontData buffers"]
+        F1["FontData: Inter 12pt"]
+        F2["FontData: Inter 16pt"]
+        F3["FontData: Mono 12pt"]
+    end
+    G1 -->|Arc| F1
+    G2 -->|Arc| F2
+    G3 -->|Arc| F1
+    GN -->|Arc| F3
+
+    note1["Memory: 1M × Glyph + 3 × FontData<br/>(not 1M × FontData)"]
+    Pool -.-> note1

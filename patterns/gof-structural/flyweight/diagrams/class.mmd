@@ -1,0 +1,25 @@
+%% Flyweight — share immutable state across many fine-grained
+%% objects. The "intrinsic" (shared) state is kept in a small pool;
+%% each instance carries only "extrinsic" (per-instance) data and a
+%% cheap reference into the pool.
+classDiagram
+    class Glyph {
+        +char_code: char
+        +ttf: Arc~FontData~
+    }
+    class FontData {
+        <<shared, immutable>>
+        +name: String
+        +size: u16
+        +bytes: Vec~u8~
+    }
+    class FontPool {
+        -pool: HashMap~String, Arc~FontData~~
+        +get(name) Arc~FontData~
+    }
+
+    Glyph --> FontData : Arc reference
+    FontPool --> FontData : interns
+    FontPool ..> Glyph : reuses the same Arc across glyphs
+
+    note for FontData "Arc&lt;T&gt; is Rust's built-in flyweight.\nEach Glyph clone bumps the refcount;\nno duplication of the heavy FontData."

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .current { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+    .past    { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .future  { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow   { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label   { font-size: 13px; fill: #111827; }
+    .sub     { font-size: 11px; fill: #374151; }
+    .title   { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis    { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono    { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Memento — past stack + current + future stack</text>
+
+  <text x="20" y="60" class="axis">PAST (undo targets)</text>
+  <rect x="20"  y="80" width="140" height="50" rx="8" class="past"/>
+  <text x="90"  y="108" text-anchor="middle" class="label">state t=0</text>
+  <rect x="170" y="80" width="140" height="50" rx="8" class="past"/>
+  <text x="240" y="108" text-anchor="middle" class="label">state t=1</text>
+
+  <rect x="320" y="80" width="140" height="50" rx="8" class="current"/>
+  <text x="390" y="108" text-anchor="middle" class="label">current t=2</text>
+
+  <text x="470" y="60" class="axis">FUTURE (redo targets)</text>
+  <rect x="470" y="80" width="120" height="50" rx="8" class="future"/>
+  <text x="530" y="108" text-anchor="middle" class="label">state t=3</text>
+  <rect x="600" y="80" width="100" height="50" rx="8" class="future"/>
+  <text x="650" y="108" text-anchor="middle" class="label">state t=4</text>
+
+  <path class="arrow" d="M390 130 L240 80"/>
+  <text x="290" y="155" class="sub">undo: current → future; past.pop() → current</text>
+
+  <path class="arrow" d="M390 130 L530 80"/>
+  <text x="420" y="175" class="sub">redo: current → past; future.pop() → current</text>
+
+  <rect x="20"  y="200" width="680" height="80" rx="8" class="current" fill="white" stroke="#374151"/>
+  <text x="40"  y="224" class="mono">#[derive(Clone)] on the state; history holds Vec&lt;State&gt;.</text>
+  <text x="40"  y="244" class="mono">Every edit snapshots before; undo restores; any new edit clears future.</text>
+  <text x="40"  y="264" class="mono">For large state, clone ownership-shared (Arc) or use Command-based undo instead.</text>
+</svg>

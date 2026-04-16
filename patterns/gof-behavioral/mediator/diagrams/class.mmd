@@ -1,0 +1,24 @@
+%% Mediator — a central hub routes messages between colleagues so
+%% they don't need to know about each other directly.
+classDiagram
+    class Mediator {
+        <<trait>>
+        +publish(event)
+    }
+    class ChatRoom {
+        -users: Vec~UserId~
+        -tx: broadcast::Sender~Event~
+        +join(UserId)
+        +send(from, text)
+    }
+    class User {
+        +id: UserId
+        +rx: broadcast::Receiver~Event~
+        +recv() Event
+    }
+
+    Mediator <|.. ChatRoom
+    ChatRoom --> User : addresses by id
+    User --> ChatRoom : publishes through
+
+    note for ChatRoom "Users don't hold refs to other users.\nThey publish events to the hub.\nThe hub fans out.\nRust idiom: tokio::sync::broadcast\nor a plain Vec&lt;Sender&gt;."

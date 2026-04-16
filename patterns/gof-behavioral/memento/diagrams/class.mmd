@@ -1,0 +1,29 @@
+%% Memento — capture an object's state so it can be restored later
+%% (undo/redo). Rust's #[derive(Clone)] gives you the "capture" side
+%% of the pattern for free; the remaining design is WHO holds the
+%% history and WHAT gets snapshotted.
+classDiagram
+    class Editor {
+        +text: String
+        +cursor: usize
+        +snapshot() EditorState
+        +restore(EditorState)
+    }
+    class EditorState {
+        <<Clone>>
+        +text: String
+        +cursor: usize
+    }
+    class History {
+        -past: Vec~EditorState~
+        -future: Vec~EditorState~
+        +save(EditorState)
+        +undo() Option~EditorState~
+        +redo() Option~EditorState~
+    }
+
+    Editor ..> EditorState : captures snapshot
+    History --> EditorState : stacks past + future
+    Editor --> History : save / undo / redo
+
+    note for EditorState "In Rust the 'memento' is just a\nClone of the relevant state.\nKeep it narrow: only the fields\nthe caretaker needs to restore."

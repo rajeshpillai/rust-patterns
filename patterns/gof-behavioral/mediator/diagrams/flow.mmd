@@ -1,0 +1,17 @@
+%% Users publish to the hub; hub fans out. No user-to-user direct
+%% reference.
+sequenceDiagram
+    participant A as Alice
+    participant H as ChatRoom
+    participant B as Bob
+    participant C as Carol
+
+    A->>H: send("hello everyone")
+    H->>A: receive("hello everyone")
+    H->>B: receive("hello everyone")
+    H->>C: receive("hello everyone")
+
+    B->>H: send("hey Alice")
+    H->>A: receive("hey Alice")
+    H->>B: receive("hey Alice")
+    H->>C: receive("hey Alice")

@@ -1,0 +1,24 @@
+%% Undo/redo: past stack, future stack. Every mutation pushes a
+%% snapshot; undo pops past into future; redo pops future into past.
+sequenceDiagram
+    participant App as Editor
+    participant H as History
+
+    App->>H: save(snapshot)
+    Note right of H: past += snapshot<br/>future = empty
+    App->>App: mutate state
+    App->>H: save(snapshot)
+
+    Note over App,H: user presses Ctrl-Z
+    App->>H: undo
+    H->>H: s = past.pop
+    H->>H: future.push(current)
+    H-->>App: s
+    App->>App: restore(s)
+
+    Note over App,H: user presses Ctrl-Shift-Z
+    App->>H: redo
+    H->>H: s = future.pop
+    H->>H: past.push(current)
+    H-->>App: s
+    App->>App: restore(s)
