@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 360" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .box      { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .box-ok   { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .box-bad  { fill: #fee2e2; stroke: #991b1b; stroke-width: 2; }
+    .arrow    { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label    { font-size: 13px; fill: #111827; }
+    .sub      { font-size: 11px; fill: #374151; }
+    .title    { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis     { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono     { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Observer — the GoF form, and three idiomatic replacements</text>
+
+  <text x="20" y="60" class="axis">GOF (avoid in Rust)</text>
+  <rect x="20" y="78" width="650" height="56" rx="8" class="box-bad"/>
+  <text x="345" y="100" text-anchor="middle" class="label">Subject: Arc&lt;Mutex&lt;Vec&lt;Box&lt;dyn Observer&gt;&gt;&gt;&gt;</text>
+  <text x="345" y="120" text-anchor="middle" class="sub">4 layers of indirection · lock on every notify · unclear who owns what · awkward unregister</text>
+
+  <text x="20" y="166" class="axis">RUST ALTERNATIVES (prefer one of these)</text>
+
+  <rect x="20" y="186" width="200" height="130" rx="8" class="box-ok"/>
+  <text x="120" y="210" text-anchor="middle" class="label">A. Channel (broadcast / mpsc)</text>
+  <text x="120" y="230" text-anchor="middle" class="mono">let (tx, _) = broadcast::channel(16);</text>
+  <text x="120" y="250" text-anchor="middle" class="mono">tx.send(event)?;</text>
+  <text x="120" y="268" text-anchor="middle" class="sub">each subscriber owns its Receiver</text>
+  <text x="120" y="284" text-anchor="middle" class="sub">thread- or task-safe by construction</text>
+  <text x="120" y="302" text-anchor="middle" class="sub">backpressure is explicit</text>
+
+  <rect x="240" y="186" width="200" height="130" rx="8" class="box-ok"/>
+  <text x="340" y="210" text-anchor="middle" class="label">B. Callback list (closures)</text>
+  <text x="340" y="230" text-anchor="middle" class="mono">callbacks: Vec&lt;Box&lt;dyn Fn(&amp;E)&gt;&gt;</text>
+  <text x="340" y="250" text-anchor="middle" class="mono">bus.on(|e| ...);</text>
+  <text x="340" y="268" text-anchor="middle" class="sub">synchronous, single thread</text>
+  <text x="340" y="284" text-anchor="middle" class="sub">simple for in-process listeners</text>
+  <text x="340" y="302" text-anchor="middle" class="sub">return a token to unregister</text>
+
+  <rect x="460" y="186" width="210" height="130" rx="8" class="box-ok"/>
+  <text x="565" y="210" text-anchor="middle" class="label">C. Async stream</text>
+  <text x="565" y="230" text-anchor="middle" class="mono">fn events() -&gt; impl Stream&lt;Event&gt;</text>
+  <text x="565" y="250" text-anchor="middle" class="mono">while let Some(e) = s.next().await {}</text>
+  <text x="565" y="268" text-anchor="middle" class="sub">best for async runtimes</text>
+  <text x="565" y="284" text-anchor="middle" class="sub">composes with filter/map/throttle</text>
+  <text x="565" y="302" text-anchor="middle" class="sub">integrates with select! / join!</text>
+
+  <text x="20" y="350" class="sub">Pick the one that matches your concurrency model. Don't simulate GoF's unowned Observer list.</text>
+</svg>

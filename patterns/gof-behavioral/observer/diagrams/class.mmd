@@ -1,0 +1,23 @@
+%% Classical GoF Observer — Subject keeps a list of Observer references
+%% and calls `update()` on each when state changes.
+classDiagram
+    class Subject {
+        -observers: List~Observer~
+        +attach(Observer)
+        +detach(Observer)
+        +notify()
+    }
+    class Observer {
+        <<interface>>
+        +update(event)
+    }
+    class Logger
+    class Emailer
+    class Metrics
+
+    Subject --> "*" Observer : notifies
+    Observer <|.. Logger
+    Observer <|.. Emailer
+    Observer <|.. Metrics
+
+    note for Subject "In Rust this becomes\nArc&lt;Mutex&lt;Vec&lt;Box&lt;dyn Observer&gt;&gt;&gt;&gt;\nor similar. Four layers of indirection.\nEach .notify() locks, iterates,\nand dynamically dispatches."

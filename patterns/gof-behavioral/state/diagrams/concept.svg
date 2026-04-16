@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .box        { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .box-err    { fill: #fee2e2; stroke: #991b1b; stroke-width: 2; }
+    .box-ok     { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow      { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .arrow-bad  { stroke: #991b1b; stroke-width: 2; stroke-dasharray: 4 3; fill: none; marker-end: url(#a); }
+    .label      { font-size: 13px; fill: #111827; }
+    .sub        { font-size: 11px; fill: #374151; }
+    .title      { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis       { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .good       { font-size: 11px; fill: #166534; font-style: italic; }
+    .bad        { font-size: 11px; fill: #991b1b; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">State pattern — runtime (GoF) vs compile-time (Typestate)</text>
+
+  <text x="20" y="60" class="axis">GoF STATE (runtime)</text>
+  <rect x="20"  y="80" width="130" height="60" rx="8" class="box"/>
+  <text x="85" y="107" text-anchor="middle" class="label">Post(Draft)</text>
+  <text x="85" y="125" text-anchor="middle" class="sub">state: Box&lt;dyn State&gt;</text>
+
+  <rect x="200" y="80" width="130" height="60" rx="8" class="box"/>
+  <text x="265" y="107" text-anchor="middle" class="label">Post(Pending)</text>
+  <text x="265" y="125" text-anchor="middle" class="sub">state swapped at runtime</text>
+
+  <rect x="380" y="80" width="130" height="60" rx="8" class="box-ok"/>
+  <text x="445" y="107" text-anchor="middle" class="label">Post(Published)</text>
+
+  <path class="arrow" d="M150 110 L200 110"/>
+  <text x="175" y="98" text-anchor="middle" class="sub">.submit()</text>
+  <path class="arrow" d="M330 110 L380 110"/>
+  <text x="355" y="98" text-anchor="middle" class="sub">.approve()</text>
+
+  <rect x="540" y="80" width="130" height="60" rx="8" class="box-err"/>
+  <text x="605" y="107" text-anchor="middle" class="label">panic / ignore</text>
+  <text x="605" y="125" text-anchor="middle" class="sub">(illegal transition)</text>
+
+  <path class="arrow-bad" d="M85 140 L570 140"/>
+  <text x="325" y="160" text-anchor="middle" class="bad">.approve() called on a Draft — discovered in prod</text>
+
+  <text x="20" y="200" class="axis">TYPESTATE (compile-time)</text>
+  <rect x="20"  y="220" width="130" height="60" rx="8" class="box"/>
+  <text x="85" y="247" text-anchor="middle" class="label">Post&lt;Draft&gt;</text>
+
+  <rect x="200" y="220" width="130" height="60" rx="8" class="box"/>
+  <text x="265" y="247" text-anchor="middle" class="label">Post&lt;Pending&gt;</text>
+
+  <rect x="380" y="220" width="130" height="60" rx="8" class="box-ok"/>
+  <text x="445" y="247" text-anchor="middle" class="label">Post&lt;Published&gt;</text>
+
+  <path class="arrow" d="M150 250 L200 250"/>
+  <text x="175" y="238" text-anchor="middle" class="sub">.submit()</text>
+  <path class="arrow" d="M330 250 L380 250"/>
+  <text x="355" y="238" text-anchor="middle" class="sub">.approve()</text>
+
+  <text x="540" y="247" class="good">.approve() on Post&lt;Draft&gt;</text>
+  <text x="540" y="262" class="good">does not compile (E0599)</text>
+
+  <path d="M20 315 L660 315" stroke="#9ca3af" stroke-dasharray="2 3" fill="none"/>
+  <text x="20" y="332" class="sub">Same state machine. Different home for the rules.</text>
+</svg>

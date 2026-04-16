@@ -1,0 +1,21 @@
+%% Idiomatic Rust alternatives. Pick one:
+%%  1) Channels (mpsc / broadcast) — subject sends, observers receive on their own threads.
+%%  2) Callbacks — subject holds Vec<Box<dyn Fn(&Event)>>, owners register closures.
+%%  3) Async streams — subject returns an impl Stream<Item = Event>, observers `.await`.
+flowchart LR
+    subgraph "Option A: Channels"
+        S1[Subject] -->|broadcast::Sender| R1[Receiver A]
+        S1 -->|broadcast::Sender| R2[Receiver B]
+        S1 -->|broadcast::Sender| R3[Receiver C]
+    end
+
+    subgraph "Option B: Callback list"
+        S2[Subject] --> CB1["Fn(&Event)"]
+        S2 --> CB2["Fn(&Event)"]
+        S2 --> CB3["Fn(&Event)"]
+    end
+
+    subgraph "Option C: Async stream"
+        S3[Subject] -.->|impl Stream| AC[async consumer]
+        AC -->|for await e in stream| H[handle]
+    end

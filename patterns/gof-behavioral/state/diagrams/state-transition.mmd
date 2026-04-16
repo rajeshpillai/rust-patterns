@@ -1,0 +1,16 @@
+%% Post workflow — the domain state machine.
+%% Every allowed transition is named. Anything else is a runtime error
+%% in the GoF form and a compile error in the Typestate form.
+stateDiagram-v2
+    [*] --> Draft : Post::new()
+    Draft --> Pending   : .submit()
+    Pending --> Draft   : .reject()
+    Pending --> Published : .approve()
+    Published --> [*]
+
+    note right of Draft
+      .approve() here is
+      a protocol error.
+      GoF: panic or ignore.
+      Typestate: does not compile.
+    end note

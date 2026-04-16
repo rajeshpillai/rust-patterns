@@ -1,0 +1,28 @@
+%% Newtype — wrap a primitive in a single-field struct so the
+%% type system distinguishes it from every other value of the same
+%% underlying shape.
+classDiagram
+    class String {
+        <<primitive>>
+    }
+    class EmailAddress {
+        -String inner
+        +parse(String) Result~EmailAddress, InvalidEmail~
+        +as_str() &str
+    }
+    class UserId {
+        -u64 inner
+        +new(u64) UserId
+        +as_u64() u64
+    }
+    class OrderId {
+        -u64 inner
+        +new(u64) OrderId
+        +as_u64() u64
+    }
+
+    String <.. EmailAddress : wraps
+    EmailAddress : validated at parse()
+    EmailAddress : inner is private
+
+    note for UserId "UserId and OrderId both wrap u64\nbut are *distinct types*. Passing\na UserId where an OrderId is\nexpected is a compile error."

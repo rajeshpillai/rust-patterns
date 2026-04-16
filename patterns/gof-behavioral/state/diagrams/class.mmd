@@ -1,0 +1,29 @@
+%% Classical GoF State — Context holds a polymorphic state pointer.
+%% Each ConcreteState implements the full State interface and decides
+%% which transitions are legal at runtime.
+classDiagram
+    class Context {
+        -state: State
+        +request()
+        +set_state(State)
+    }
+    class State {
+        <<interface>>
+        +handle(Context)
+    }
+    class Draft {
+        +handle(Context)
+    }
+    class Pending {
+        +handle(Context)
+    }
+    class Published {
+        +handle(Context)
+    }
+
+    Context --> State : current
+    State <|.. Draft
+    State <|.. Pending
+    State <|.. Published
+
+    note for State "In GoF, every State implements\nevery method of the interface.\nIllegal transitions are runtime errors\n(panic / ignore / exception)."

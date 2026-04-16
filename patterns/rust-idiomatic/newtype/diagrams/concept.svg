@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .raw   { fill: #fee2e2; stroke: #991b1b; stroke-width: 2; }
+    .typed { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .arrow { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .xarrow{ stroke: #991b1b; stroke-width: 2; stroke-dasharray: 4 3; fill: none; }
+    .label { font-size: 13px; fill: #111827; }
+    .sub   { font-size: 11px; fill: #374151; }
+    .title { font-size: 15px; font-weight: 600; fill: #111827; }
+    .good  { font-size: 11px; fill: #166534; font-style: italic; }
+    .bad   { font-size: 11px; fill: #991b1b; font-style: italic; }
+    .mono  { font-family: ui-monospace, monospace; font-size: 12px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Newtype — distinct types for distinct meanings</text>
+
+  <rect x="20"  y="60"  width="140" height="60" rx="8" class="raw"/>
+  <text x="90"  y="88"  text-anchor="middle" class="label">raw u64</text>
+  <text x="90"  y="106" text-anchor="middle" class="sub">user id or order id?</text>
+
+  <rect x="260" y="60"  width="140" height="60" rx="8" class="typed"/>
+  <text x="330" y="88"  text-anchor="middle" class="label">UserId(u64)</text>
+  <text x="330" y="106" text-anchor="middle" class="mono">fn find(u: UserId)</text>
+
+  <rect x="500" y="60"  width="140" height="60" rx="8" class="typed"/>
+  <text x="570" y="88"  text-anchor="middle" class="label">OrderId(u64)</text>
+  <text x="570" y="106" text-anchor="middle" class="mono">fn cancel(o: OrderId)</text>
+
+  <path class="xarrow" d="M400 90 L500 90"/>
+  <text x="450" y="82"  text-anchor="middle" class="bad">E0308: mismatched types</text>
+
+  <rect x="20"  y="160" width="140" height="60" rx="8" class="raw"/>
+  <text x="90"  y="188" text-anchor="middle" class="label">raw String</text>
+  <text x="90"  y="206" text-anchor="middle" class="sub">could be anything</text>
+
+  <rect x="260" y="160" width="140" height="60" rx="8" class="typed"/>
+  <text x="330" y="188" text-anchor="middle" class="label">EmailAddress</text>
+  <text x="330" y="206" text-anchor="middle" class="sub">validated at parse()</text>
+
+  <rect x="500" y="160" width="140" height="60" rx="8" class="typed"/>
+  <text x="570" y="188" text-anchor="middle" class="label">send_welcome(e)</text>
+  <text x="570" y="206" text-anchor="middle" class="sub">no re-validation needed</text>
+
+  <path class="arrow" d="M160 190 L260 190"/>
+  <text x="210" y="182" text-anchor="middle" class="sub">parse()</text>
+  <path class="arrow" d="M400 190 L500 190"/>
+  <text x="450" y="182" text-anchor="middle" class="good">type proves validity</text>
+
+  <text x="20" y="260" class="sub">Newtype buys you: 1) distinct types for same shape,  2) "parse don't validate" at boundaries.</text>
+</svg>
