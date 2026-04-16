@@ -1,5 +1,7 @@
 # Rust Design Patterns
 
+**Live site:** https://rajeshpillai.github.io/rust-patterns/
+
 A visual, static-hosted tutorial that teaches design patterns **the Rust way** — classical Gang of Four patterns translated into idiomatic Rust, plus a second track of Rust-native patterns (typestate, newtype, RAII, sealed traits, phantom types, error-as-values).
 
 Every pattern ships with:
@@ -21,11 +23,10 @@ Every pattern ships with:
 ## Repository Layout
 
 ```
-patterns/          one folder per pattern (index.md + diagrams/ + code/)
-frontend/          SolidJS + Vite site
-scripts/           build-index.mjs walks patterns/** at build time
-.github/workflows/ GitHub Pages deploy
-CLAUDE.md          authoring & teaching rules (read this before contributing)
+patterns/    one folder per pattern (index.md + diagrams/ + code/)
+frontend/    SolidJS + Vite site
+scripts/     build-index.mjs, deploy-gh-pages.sh, stub helpers
+CLAUDE.md    authoring & teaching rules (read this before contributing)
 ```
 
 ## Local Development
@@ -36,6 +37,21 @@ npm install
 npm run dev        # starts Vite on http://localhost:5173
 npm run build      # emits frontend/dist/ for GitHub Pages
 ```
+
+## Publishing
+
+Deploy to GitHub Pages from the repo root:
+
+```bash
+./scripts/deploy-gh-pages.sh            # interactive — prompts before push
+./scripts/deploy-gh-pages.sh --dry-run  # build + package without pushing
+./scripts/deploy-gh-pages.sh --yes      # CI-friendly, no prompt
+```
+
+The script builds with `GITHUB_PAGES=true`, adds `.nojekyll` and a
+`404.html` SPA fallback, and force-pushes `frontend/dist/` to the
+`gh-pages` branch of `origin`. First-time setup requires enabling
+Pages in the repo's Settings → Pages (source: `gh-pages` / root).
 
 ## Contributing a Pattern
 
