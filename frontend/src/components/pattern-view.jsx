@@ -1,4 +1,5 @@
-import { For, Show } from 'solid-js';
+import { For, Show, onMount, onCleanup, createEffect } from 'solid-js';
+import { A, useNavigate } from '@solidjs/router';
 import Markdown from './markdown.jsx';
 import CodePanel from './code-panel.jsx';
 
@@ -11,9 +12,37 @@ const VERDICT_META = {
 
 export default function PatternView(props) {
   const verdict = () => VERDICT_META[props.pattern?.verdict] ?? VERDICT_META['use'];
+  const navigate = useNavigate();
+
+  // Scroll to top when the selected pattern changes so readers don't
+  // start mid-article after clicking a sidebar entry.
+  let scroller;
+  createEffect(() => {
+    void props.pattern?.id;
+    if (scroller) scroller.scrollTop = 0;
+  });
+
+  // Keyboard shortcuts: j / → next, k ← → previous, skipping while
+  // the user is typing in an input or search box.
+  onMount(() => {
+    const onKey = (e) => {
+      const tag = (e.target?.tagName ?? '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if ((e.key === 'j' || e.key === 'ArrowRight') && props.next) {
+        e.preventDefault();
+        navigate(`/patterns/${props.track}/${props.next.id}`);
+      } else if ((e.key === 'k' || e.key === 'ArrowLeft') && props.prev) {
+        e.preventDefault();
+        navigate(`/patterns/${props.track}/${props.prev.id}`);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    onCleanup(() => window.removeEventListener('keydown', onKey));
+  });
 
   return (
-    <div class="flex-1 overflow-y-auto">
+    <div ref={scroller} class="flex-1 overflow-y-auto">
       <article class="max-w-4xl mx-auto px-6 py-8">
         <header class="mb-6">
           <div class="text-xs text-neutral-500 uppercase tracking-wider">
@@ -48,6 +77,56 @@ export default function PatternView(props) {
             </For>
           </section>
         </Show>
+
+        <nav
+          aria-label="Pattern navigation"
+          class="mt-12 pt-6 border-t border-neutral-200 dark:border-neutral-800 grid grid-cols-2 gap-4"
+        >
+          <Show
+            when={props.prev}
+            fallback={<span class="opacity-0 select-none" aria-hidden />}
+          >
+            <A
+              href={`/patterns/${props.track}/${props.prev.id}`}
+              class="group block rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 hover:border-amber-500 transition"
+            >
+              <div class="text-[11px] uppercase tracking-wider text-neutral-500">
+                ← Previous
+              </div>
+              <div class="text-sm font-semibold mt-1 group-hover:text-amber-600 dark:group-hover:text-amber-400">
+                {props.prev.title}
+              </div>
+              <div class="text-xs text-neutral-500 mt-0.5">
+                {props.prev.group}
+              </div>
+            </A>
+          </Show>
+
+          <Show
+            when={props.next}
+            fallback={<span class="opacity-0 select-none" aria-hidden />}
+          >
+            <A
+              href={`/patterns/${props.track}/${props.next.id}`}
+              class="group block rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 hover:border-amber-500 transition text-right"
+            >
+              <div class="text-[11px] uppercase tracking-wider text-neutral-500">
+                Next →
+              </div>
+              <div class="text-sm font-semibold mt-1 group-hover:text-amber-600 dark:group-hover:text-amber-400">
+                {props.next.title}
+              </div>
+              <div class="text-xs text-neutral-500 mt-0.5">
+                {props.next.group}
+              </div>
+            </A>
+          </Show>
+        </nav>
+
+        <p class="mt-4 text-[11px] text-neutral-500 text-center">
+          Press <kbd class="px-1 rounded border border-neutral-300 dark:border-neutral-700">j</kbd> / <kbd class="px-1 rounded border border-neutral-300 dark:border-neutral-700">→</kbd> for next ·
+          <kbd class="ml-1 px-1 rounded border border-neutral-300 dark:border-neutral-700">k</kbd> / <kbd class="px-1 rounded border border-neutral-300 dark:border-neutral-700">←</kbd> for previous
+        </p>
       </article>
     </div>
   );

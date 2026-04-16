@@ -25,6 +25,17 @@ export default function PatternBrowser() {
     return trackPatterns().find((p) => p.id === id);
   });
 
+  const neighbors = createMemo(() => {
+    const list = trackPatterns();
+    const sel = selected();
+    if (!sel) return { prev: null, next: null };
+    const i = list.findIndex((p) => p.id === sel.id);
+    return {
+      prev: i > 0 ? list[i - 1] : null,
+      next: i >= 0 && i < list.length - 1 ? list[i + 1] : null,
+    };
+  });
+
   return (
     <div class="flex h-full">
       <Show when={sidebarOpen()}>
@@ -66,7 +77,12 @@ export default function PatternBrowser() {
             </div>
           }
         >
-          <PatternView pattern={selected()} />
+          <PatternView
+            pattern={selected()}
+            track={activeTrack()}
+            prev={neighbors().prev}
+            next={neighbors().next}
+          />
         </Show>
       </div>
     </div>
