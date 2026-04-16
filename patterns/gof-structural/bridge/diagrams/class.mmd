@@ -1,0 +1,29 @@
+%% Bridge — decouple an abstraction from its implementation so the
+%% two can vary independently. In Rust: a struct generic over the
+%% implementation type, with both sides being traits.
+classDiagram
+    class Message~R~ {
+        -body: String
+        -renderer: R
+        +render() String
+    }
+    class Renderer {
+        <<trait>>
+        +line(s: &amp;str) String
+        +heading(s: &amp;str) String
+    }
+    class PlainRenderer
+    class HtmlRenderer
+    class MarkdownRenderer
+    class UrgentMessage~R~
+    class NormalMessage~R~
+
+    Renderer <|.. PlainRenderer
+    Renderer <|.. HtmlRenderer
+    Renderer <|.. MarkdownRenderer
+    Message <|-- UrgentMessage
+    Message <|-- NormalMessage
+
+    Message --> Renderer : delegates
+
+    note for Message "Abstraction × Implementation — two axes.\nChanging message TYPES doesn't change renderers.\nChanging renderers doesn't change message types."

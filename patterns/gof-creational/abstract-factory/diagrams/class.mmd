@@ -1,0 +1,37 @@
+%% Classical GoF Abstract Factory — one factory type produces a
+%% *family* of related products. In Rust, the cleanest rendering is
+%% a trait with multiple associated types, sealed so only your crate
+%% can ship concrete factory kits.
+classDiagram
+    class UiKit {
+        <<trait>>
+        +Button
+        +Checkbox
+        +button(label) Self::Button
+        +checkbox(label) Self::Checkbox
+    }
+    class Button {
+        <<trait>>
+        +render() String
+    }
+    class Checkbox {
+        <<trait>>
+        +render() String
+    }
+    class WindowsKit
+    class MacKit
+    class WindowsButton
+    class WindowsCheckbox
+    class MacButton
+    class MacCheckbox
+
+    UiKit <|.. WindowsKit
+    UiKit <|.. MacKit
+    Button <|.. WindowsButton
+    Button <|.. MacButton
+    Checkbox <|.. WindowsCheckbox
+    Checkbox <|.. MacCheckbox
+    WindowsKit ..> WindowsButton : makes
+    WindowsKit ..> WindowsCheckbox : makes
+    MacKit ..> MacButton : makes
+    MacKit ..> MacCheckbox : makes

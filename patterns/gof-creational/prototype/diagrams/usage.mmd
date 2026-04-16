@@ -1,0 +1,13 @@
+%% Real-world Prototype in Rust: keep a "template" and Clone it when
+%% you need a new instance, then mutate the copy. It's one line of
+%% code per usage.
+sequenceDiagram
+    participant Caller
+    participant T as Template (base Document)
+    participant D as new Document
+
+    Caller->>T: let doc = template.clone()
+    T-->>D: deep copy via derive(Clone)
+    Caller->>D: doc.title.push_str(" (v2)")
+    Note right of D: mutation only affects the copy
+    Caller->>D: save(doc)

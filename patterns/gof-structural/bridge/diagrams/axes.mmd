@@ -1,0 +1,26 @@
+%% Two axes, linear growth. Without Bridge, you'd have MessageType ×
+%% Renderer concrete classes (multiplicative). With Bridge, adding a
+%% new type or a new renderer is independent.
+flowchart TB
+    subgraph Abstractions["Message types (abstractions)"]
+        A1[NormalMessage]
+        A2[UrgentMessage]
+        A3[ArchivedMessage]
+    end
+    subgraph Implementations["Renderers (implementations)"]
+        I1[PlainRenderer]
+        I2[HtmlRenderer]
+        I3[MarkdownRenderer]
+    end
+    A1 --> I1
+    A1 --> I2
+    A1 --> I3
+    A2 --> I1
+    A2 --> I2
+    A2 --> I3
+    A3 --> I1
+    A3 --> I2
+    A3 --> I3
+
+    note1["3 + 3 = 6 types<br/>(without Bridge: 3 × 3 = 9)"]
+    A2 -.-> note1

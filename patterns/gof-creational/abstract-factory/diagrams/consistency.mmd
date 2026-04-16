@@ -1,0 +1,15 @@
+%% Consistency — Abstract Factory's defining virtue: you cannot mix
+%% WindowsButton with MacCheckbox because each factory's associated
+%% types lock the products to one family.
+flowchart TB
+    Kit[WindowsKit] --> WB[WindowsButton]
+    Kit --> WC[WindowsCheckbox]
+
+    Kit2[MacKit] --> MB[MacButton]
+    Kit2 --> MC[MacCheckbox]
+
+    Bad["a: WindowsKit::Button · b: MacKit::Checkbox — two different types,<br/>cannot share one render pipeline. Compile-time prevented."]
+    style Bad fill:#fee2e2,stroke:#991b1b
+
+    WB -.-> Bad
+    MC -.-> Bad

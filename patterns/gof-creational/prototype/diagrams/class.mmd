@@ -1,0 +1,23 @@
+%% Classical GoF Prototype — an interface with a `clone()` method
+%% that returns a new instance. In Rust this is the standard library's
+%% `Clone` trait, with `#[derive(Clone)]` as the one-line implementation.
+classDiagram
+    class Clone {
+        <<trait>>
+        +clone(&self) Self
+    }
+    class Document {
+        +title: String
+        +tags: Vec~String~
+        +impl Clone via derive
+    }
+    class Template {
+        +base: Document
+        +instance() Document
+    }
+
+    Document ..|> Clone
+    Template --> Document : stores prototype
+    Template ..> Document : instance = base.clone() + tweaks
+
+    note for Clone "In Rust, Prototype is not a thing\nyou BUILD — it's a thing you DERIVE.\n#[derive(Clone)] gives you\nthe whole pattern for free.\nThe 'interesting' question is:\nwhich type should you wrap in a Newtype\nto make the cloned copy distinct?"
