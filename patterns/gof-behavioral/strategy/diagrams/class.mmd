@@ -1,0 +1,21 @@
+%% Classical GoF Strategy — a family of interchangeable algorithms
+%% behind a common interface. Context holds one and delegates.
+classDiagram
+    class Context {
+        -strategy: Strategy
+        +execute(input) output
+    }
+    class Strategy {
+        <<interface>>
+        +compress(bytes) bytes
+    }
+    class GzipStrategy
+    class ZstdStrategy
+    class NoopStrategy
+
+    Context --> Strategy : delegates
+    Strategy <|.. GzipStrategy
+    Strategy <|.. ZstdStrategy
+    Strategy <|.. NoopStrategy
+
+    note for Strategy "In Rust: a trait,\na generic parameter,\na closure, or an enum.\nFour choices, same shape."

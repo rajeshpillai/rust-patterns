@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .box-open  { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .box-hold  { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+    .box-close { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .scope     { fill: none; stroke: #6b7280; stroke-width: 1.5; stroke-dasharray: 6 4; }
+    .arrow     { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .arrow-panic { stroke: #991b1b; stroke-width: 2; fill: none; marker-end: url(#a); }
+    .label     { font-size: 13px; fill: #111827; }
+    .sub       { font-size: 11px; fill: #374151; }
+    .title     { font-size: 15px; font-weight: 600; fill: #111827; }
+    .mono      { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+    .panic     { font-size: 11px; fill: #991b1b; font-style: italic; }
+    .good      { font-size: 11px; fill: #166534; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">RAII — scope is the resource's lifetime</text>
+
+  <rect x="40" y="60" width="640" height="230" rx="8" class="scope"/>
+  <text x="56" y="80" class="sub">fn process() { ... }</text>
+
+  <rect x="80"  y="100" width="170" height="60" rx="8" class="box-open"/>
+  <text x="165" y="124" text-anchor="middle" class="label">FileHandle::open</text>
+  <text x="165" y="142" text-anchor="middle" class="sub">resource acquired</text>
+
+  <rect x="280" y="100" width="170" height="60" rx="8" class="box-hold"/>
+  <text x="365" y="124" text-anchor="middle" class="label">handle.write(...)</text>
+  <text x="365" y="142" text-anchor="middle" class="sub">value owned, fd open</text>
+
+  <rect x="480" y="100" width="170" height="60" rx="8" class="box-close"/>
+  <text x="565" y="124" text-anchor="middle" class="label">Drop::drop(&amp;mut self)</text>
+  <text x="565" y="142" text-anchor="middle" class="sub">fd auto-closed</text>
+
+  <path class="arrow" d="M250 130 L280 130"/>
+  <path class="arrow" d="M450 130 L480 130"/>
+
+  <text x="80"  y="200" class="mono">let handle = FileHandle::open("data.txt")?;</text>
+  <text x="80"  y="220" class="mono">handle.write(b"hello")?;</text>
+  <text x="80"  y="240" class="mono">}  // ← Drop runs here, automatically</text>
+
+  <path class="arrow-panic" d="M365 160 Q 365 220 565 220 L565 160"/>
+  <text x="365" y="270" class="panic">even on ? early return or panic, Drop still runs</text>
+  <text x="365" y="285" class="good">("you cannot forget to close")</text>
+</svg>

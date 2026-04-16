@@ -1,0 +1,10 @@
+%% Classical GoF Singleton — static instance, private constructor,
+%% getInstance() returns the one value.
+classDiagram
+    class Singleton {
+        -static instance: Singleton
+        -Singleton()
+        +getInstance() Singleton$
+        +doWork()
+    }
+    note for Singleton "In Rust: static + std::sync::OnceLock.\nThread-safe by construction.\nNo `static mut`. No unsafe.\nNo lazy_static / once_cell crate needed\nsince 1.70 (OnceLock) / 1.80 (LazyLock)."

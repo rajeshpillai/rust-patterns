@@ -50,6 +50,25 @@ function playgroundUrl(source) {
   return `https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&code=${encoded}`;
 }
 
+// Read every .svg under diagrams/ so the frontend can render them
+// inline. GitHub Pages cannot serve files outside the dist bundle,
+// and we want diagrams to live in the pattern folder (co-located with
+// their prose), so we embed them at build time.
+async function loadDiagramAssets(patternDir) {
+  const dir = join(patternDir, 'diagrams');
+  if (!existsSync(dir)) return {};
+  const files = await readdir(dir);
+  const out = {};
+  for (const f of files) {
+    if (!f.endsWith('.svg')) continue;
+    const full = join(dir, f);
+    const st = await stat(full);
+    if (!st.isFile()) continue;
+    out[f] = await readFile(full, 'utf8');
+  }
+  return out;
+}
+
 async function loadCodeFiles(patternDir, playgroundLinks) {
   const codeDir = join(patternDir, 'code');
   if (!existsSync(codeDir)) return [];
@@ -90,6 +109,7 @@ async function build() {
     const { data, content } = parsed;
 
     const codeFiles = await loadCodeFiles(dir, data.playground_links);
+    const diagrams = await loadDiagramAssets(dir);
 
     patterns.push({
       id: data.id ?? relative(patternsRoot, dir).replace(/[\\/]/g, '-'),
@@ -104,6 +124,7 @@ async function build() {
       playground_links: data.playground_links ?? {},
       markdown: content,
       codeFiles,
+      diagrams,
       sourcePath: relative(repoRoot, indexPath),
     });
   }

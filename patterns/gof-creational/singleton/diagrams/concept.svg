@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .ok    { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .mid   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .bad   { fill: #fee2e2; stroke: #991b1b; stroke-width: 2; }
+    .label { font-size: 13px; fill: #111827; }
+    .sub   { font-size: 11px; fill: #374151; }
+    .title { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis  { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono  { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+    .good  { font-size: 11px; fill: #166534; font-style: italic; }
+    .warn  { font-size: 11px; fill: #92400e; font-style: italic; }
+  </style>
+
+  <text x="20" y="26" class="title">Singleton in Rust — pick the weakest tool that works</text>
+
+  <rect x="20" y="60" width="210" height="110" rx="8" class="ok"/>
+  <text x="125" y="84" text-anchor="middle" class="label">static CONST: T = T::new();</text>
+  <text x="125" y="108" text-anchor="middle" class="sub">const-evaluable only</text>
+  <text x="125" y="128" text-anchor="middle" class="sub">no heap, no allocation</text>
+  <text x="125" y="146" text-anchor="middle" class="sub">zero overhead</text>
+  <text x="125" y="164" text-anchor="middle" class="good">try this first</text>
+
+  <rect x="250" y="60" width="210" height="110" rx="8" class="ok"/>
+  <text x="355" y="84" text-anchor="middle" class="label">OnceLock&lt;T&gt;</text>
+  <text x="355" y="108" text-anchor="middle" class="sub">init exactly once</text>
+  <text x="355" y="128" text-anchor="middle" class="sub">thread-safe</text>
+  <text x="355" y="146" text-anchor="middle" class="sub">std, stable since 1.70</text>
+  <text x="355" y="164" text-anchor="middle" class="good">for lazy init</text>
+
+  <rect x="480" y="60" width="210" height="110" rx="8" class="mid"/>
+  <text x="585" y="84" text-anchor="middle" class="label">Mutex&lt;T&gt; inside OnceLock</text>
+  <text x="585" y="108" text-anchor="middle" class="sub">mutable shared state</text>
+  <text x="585" y="128" text-anchor="middle" class="sub">lock on every access</text>
+  <text x="585" y="146" text-anchor="middle" class="sub">deadlock risk</text>
+  <text x="585" y="164" text-anchor="middle" class="warn">only if truly needed</text>
+
+  <rect x="250" y="200" width="440" height="90" rx="8" class="bad"/>
+  <text x="470" y="225" text-anchor="middle" class="label">static mut X: T</text>
+  <text x="470" y="245" text-anchor="middle" class="sub">requires unsafe on every touch</text>
+  <text x="470" y="263" text-anchor="middle" class="sub">no compile-time synchronization guarantee</text>
+  <text x="470" y="281" text-anchor="middle" class="warn">do not use — the error won't surface in dev</text>
+
+  <rect x="20" y="200" width="210" height="90" rx="8" class="ok"/>
+  <text x="125" y="225" text-anchor="middle" class="label">LazyLock&lt;T&gt;</text>
+  <text x="125" y="245" text-anchor="middle" class="sub">OnceLock + init fn</text>
+  <text x="125" y="263" text-anchor="middle" class="sub">auto-derefs to &amp;T</text>
+  <text x="125" y="281" text-anchor="middle" class="good">stable since 1.80</text>
+</svg>

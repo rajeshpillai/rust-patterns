@@ -1,0 +1,19 @@
+%% OnceLock lifecycle — initialized exactly once, by whichever thread
+%% gets there first. All others observe the same value.
+sequenceDiagram
+    autonumber
+    participant T1 as Thread A
+    participant T2 as Thread B
+    participant Lock as OnceLock&lt;Config&gt;
+
+    T1->>Lock: get_or_init(|| load_config())
+    Note right of Lock: state: Uninit → Initing
+    T1->>Lock: load_config() runs
+    Note right of Lock: state: Initing → Init(cfg)
+    Lock-->>T1: &cfg
+
+    T2->>Lock: get_or_init(|| load_config())
+    Note right of T2: closure is NOT called
+    Lock-->>T2: &cfg
+
+    Note over T1,T2: Both threads observe the same &cfg.<br/>Initialization happens exactly once.

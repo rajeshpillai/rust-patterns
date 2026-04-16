@@ -1,0 +1,24 @@
+%% Four Rust shapes for Strategy — same pattern, different dispatch cost.
+flowchart TB
+    subgraph Static["Static dispatch (monomorphized)"]
+        direction LR
+        G1[Context&lt;S: Compress&gt;] -->|compile-time| GA[inlined Gzip]
+        G1 -->|compile-time| GB[inlined Zstd]
+    end
+
+    subgraph Dynamic["Dynamic dispatch (vtable)"]
+        direction LR
+        D1[Context] -->|Box&lt;dyn Compress&gt;| DV[vtable lookup] --> DI[Gzip / Zstd]
+    end
+
+    subgraph Closure["Closure (FnMut)"]
+        direction LR
+        C1[Context] -->|Box&lt;dyn Fn(&amp;[u8]) -&gt; Vec&lt;u8&gt;&gt;| CI[closure body]
+    end
+
+    subgraph Enum["Enum + match"]
+        direction LR
+        E1[Context] --> E2{match strategy} --> EG[gzip branch]
+        E2 --> EZ[zstd branch]
+        E2 --> EN[noop branch]
+    end

@@ -1,0 +1,29 @@
+%% Drop runs deterministically at end-of-scope — including on panic
+%% and on early ? return. There is no Java-style finalizer queue, no
+%% Go-style defer statement list, no try-with-resources syntax — the
+%% compiler wires it automatically.
+sequenceDiagram
+    autonumber
+    participant Caller
+    participant FH as FileHandle
+    participant OS as OS (fd table)
+
+    Caller->>FH: FileHandle::open("data.txt")
+    FH->>OS: open() -> fd
+    OS-->>FH: fd = 5
+    FH-->>Caller: FileHandle { fd: 5 }
+
+    Caller->>FH: handle.write(bytes)?
+    alt write succeeds
+        FH-->>Caller: Ok(n)
+    else write fails
+        FH-->>Caller: Err(IoError)
+        Note right of Caller: `?` returns early.<br/>Caller's scope unwinds.
+    end
+
+    Note over Caller,FH: end of scope — automatic
+    Caller->>FH: drop(handle)
+    FH->>OS: close(fd)
+    OS-->>FH: ok
+
+    Note right of OS: This sequence runs even on panic!<br/>(unwinding drops stack values in order)

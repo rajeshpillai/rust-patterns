@@ -61,7 +61,7 @@ export default function PatternView(props) {
           </div>
         </header>
 
-        <Markdown source={props.pattern.markdown} />
+        <Markdown source={props.pattern.markdown} diagrams={props.pattern.diagrams} />
 
         <Show when={props.pattern.codeFiles?.length}>
           <section class="mt-10 border-t border-neutral-200 dark:border-neutral-800 pt-6">

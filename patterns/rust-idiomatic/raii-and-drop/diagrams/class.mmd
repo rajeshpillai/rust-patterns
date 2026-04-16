@@ -1,0 +1,28 @@
+%% RAII — Resource Acquisition Is Initialization.
+%% Ownership ties a resource's lifetime to a value's scope.
+%% Drop::drop runs automatically when the value leaves scope —
+%% on normal return, on panic, on early `?` exit. You cannot forget.
+classDiagram
+    class FileHandle {
+        -fd: i32
+        +open(&str) Result~FileHandle, IoError~
+        +write(&mut self, &[u8]) Result~usize, IoError~
+        +drop()
+    }
+    class Drop {
+        <<trait>>
+        +drop(&mut self)
+    }
+    class MutexGuard~T~ {
+        -lock: &Mutex~T~
+        +drop()
+    }
+    class File {
+        (std::fs::File)
+    }
+
+    Drop <|.. FileHandle : impl Drop
+    Drop <|.. MutexGuard : impl Drop
+    Drop <|.. File      : impl Drop
+
+    note for Drop "You implement Drop ONCE\nper resource. Every caller gets\nautomatic cleanup — on normal\nreturn, on panic, on early ?\nexit. Forgetting is impossible."

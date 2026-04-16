@@ -72,6 +72,37 @@ async function hydrateMermaid(container) {
   }
 }
 
+// GitHub Pages cannot serve files outside the bundle, so diagrams
+// live as an in-memory map the markdown renderer consults when it
+// sees <img src="./diagrams/foo.svg"> references. The build script
+// (scripts/build-index.mjs) populates `pattern.diagrams`.
+function hydrateInlineDiagrams(container, diagrams) {
+  if (!diagrams) return;
+  const imgs = container.querySelectorAll('img');
+  for (const img of imgs) {
+    if (img.dataset.inlined === 'true') continue;
+    const src = img.getAttribute('src') ?? '';
+    const match = src.match(/(?:^|\/)diagrams\/([^/?#]+\.svg)$/i);
+    if (!match) continue;
+    const key = match[1];
+    const svg = diagrams[key];
+    if (!svg) continue;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'inline-svg my-6 flex justify-center';
+    wrapper.innerHTML = svg;
+    wrapper.dataset.inlined = 'true';
+    const svgEl = wrapper.querySelector('svg');
+    if (svgEl) {
+      svgEl.setAttribute('role', 'img');
+      const alt = img.getAttribute('alt');
+      if (alt) svgEl.setAttribute('aria-label', alt);
+      svgEl.style.maxWidth = '100%';
+      svgEl.style.height = 'auto';
+    }
+    img.replaceWith(wrapper);
+  }
+}
+
 export default function Markdown(props) {
   let ref;
   const html = () => md.render(props.source ?? '');
@@ -82,7 +113,9 @@ export default function Markdown(props) {
     // Re-run when source changes.
     void props.source;
     queueMicrotask(() => {
-      if (ref) hydrateMermaid(ref);
+      if (!ref) return;
+      hydrateInlineDiagrams(ref, props.diagrams);
+      hydrateMermaid(ref);
     });
   });
 
