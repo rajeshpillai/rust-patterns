@@ -1,0 +1,28 @@
+%% Idiomatic Rust Builder — consuming self, fluent, validated at build()
+classDiagram
+    class HttpClient {
+        +endpoint: String
+        +timeout: Duration
+        +retries: u8
+        +builder() HttpClientBuilder
+    }
+    class HttpClientBuilder {
+        -endpoint: Option~String~
+        -timeout: Option~Duration~
+        -retries: Option~u8~
+        +endpoint(String) Self
+        +timeout(Duration) Self
+        +retries(u8) Self
+        +build() Result~HttpClient, BuildError~
+    }
+    class BuildError {
+        <<enum>>
+        MissingEndpoint
+        RetriesTooHigh(u8)
+    }
+
+    HttpClient ..> HttpClientBuilder : factory method
+    HttpClientBuilder ..> HttpClient : constructs
+    HttpClientBuilder ..> BuildError : returns on failure
+
+    note for HttpClientBuilder "Every setter takes self by value and\nreturns Self. The builder is #[must_use]\nso ignoring the chain is a warning.\nbuild() validates required fields and\nreturns Result — never Option, never unwrap."

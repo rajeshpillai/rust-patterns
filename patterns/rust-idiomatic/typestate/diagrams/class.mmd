@@ -1,0 +1,40 @@
+%% Typestate — state lives in a generic type parameter.
+%% `build()` is ONLY defined on HttpClientBuilder<Provided>.
+%% Calling it on HttpClientBuilder<Missing> is a compile error, not a runtime panic.
+classDiagram
+    class Missing {
+        <<marker>>
+    }
+    class Provided {
+        <<marker>>
+    }
+    class HttpClientBuilder~Endpoint~ {
+        -endpoint: Option~String~
+        -timeout: Duration
+        -retries: u8
+        -_marker: PhantomData~Endpoint~
+        +new() HttpClientBuilder~Missing~
+        +timeout(Duration) Self
+        +retries(u8) Self
+    }
+    class HttpClientBuilderMissing {
+        <<impl for Missing>>
+        +endpoint(String) HttpClientBuilder~Provided~
+    }
+    class HttpClientBuilderProvided {
+        <<impl for Provided>>
+        +build() HttpClient
+    }
+    class HttpClient {
+        +endpoint: String
+        +timeout: Duration
+        +retries: u8
+    }
+
+    Missing <.. HttpClientBuilder : type param
+    Provided <.. HttpClientBuilder : type param
+    HttpClientBuilder <|.. HttpClientBuilderMissing : restricted impl
+    HttpClientBuilder <|.. HttpClientBuilderProvided : restricted impl
+    HttpClientBuilderProvided ..> HttpClient : builds
+
+    note for HttpClientBuilderProvided "build() exists only in this impl block.\nCalling .build() before .endpoint() fails with E0599:\nmethod not found."

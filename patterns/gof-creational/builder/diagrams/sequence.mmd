@@ -1,0 +1,28 @@
+%% Sequence of a fluent, consuming-self builder
+sequenceDiagram
+    autonumber
+    participant Caller
+    participant B as HttpClientBuilder
+    participant C as HttpClient
+
+    Caller->>C: HttpClient::builder()
+    C-->>Caller: HttpClientBuilder { None, None, None }
+
+    Caller->>B: .endpoint("https://api.example.com")
+    Note right of B: self is moved in,<br/>new Self moved out
+    B-->>Caller: HttpClientBuilder (chained)
+
+    Caller->>B: .timeout(Duration::from_secs(5))
+    B-->>Caller: HttpClientBuilder (chained)
+
+    Caller->>B: .retries(3)
+    B-->>Caller: HttpClientBuilder (chained)
+
+    Caller->>B: .build()
+    alt all required fields set & valid
+        B->>C: construct HttpClient { ... }
+        C-->>Caller: Ok(HttpClient)
+    else missing or invalid field
+        B-->>Caller: Err(BuildError)
+        Note right of Caller: use ? to propagate,<br/>never .unwrap()
+    end

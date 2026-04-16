@@ -1,0 +1,18 @@
+%% The type of `self` evolves with each call.
+%% Compile-time illegal transitions are impossible.
+stateDiagram-v2
+    [*] --> Missing : HttpClientBuilder::new()
+    Missing --> Provided : .endpoint(url)
+    Missing --> Missing  : .timeout(...) / .retries(...)
+    Provided --> Provided : .timeout(...) / .retries(...)
+    Provided --> [*] : .build() -> HttpClient
+
+    note right of Missing
+      .build() does not exist here.
+      Calling it is a compile error (E0599).
+    end note
+
+    note right of Provided
+      .build() is defined only on
+      HttpClientBuilder<Provided>.
+    end note

@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import "highlight.js/styles/github-dark.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light dark;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+/* Markdown prose baseline — keep small and let Tailwind utilities dominate. */
+.prose-pattern h2 {
+  @apply text-xl font-semibold mt-8 mb-3 border-b border-neutral-200 dark:border-neutral-800 pb-2;
+}
+.prose-pattern h3 {
+  @apply text-lg font-semibold mt-6 mb-2;
+}
+.prose-pattern p {
+  @apply my-3 leading-7;
+}
+.prose-pattern ul {
+  @apply list-disc pl-6 my-3 space-y-1;
+}
+.prose-pattern ol {
+  @apply list-decimal pl-6 my-3 space-y-1;
+}
+.prose-pattern a {
+  @apply text-amber-700 dark:text-amber-400 underline decoration-dotted underline-offset-2;
+}
+.prose-pattern code:not(pre code) {
+  @apply bg-neutral-200/60 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-[0.9em];
+}
+.prose-pattern pre {
+  @apply my-4 rounded-lg overflow-x-auto text-sm;
+}
+.prose-pattern table {
+  @apply my-4 border-collapse text-sm;
+}
+.prose-pattern th, .prose-pattern td {
+  @apply border border-neutral-300 dark:border-neutral-700 px-3 py-2;
+}
+.prose-pattern blockquote {
+  @apply border-l-4 border-amber-500 pl-4 italic text-neutral-600 dark:text-neutral-300 my-4;
+}
+.prose-pattern .mermaid {
+  @apply my-6 flex justify-center;
+}

@@ -1,0 +1,28 @@
+%% Classical GoF Builder (as described in Design Patterns, 1994)
+classDiagram
+    class Director {
+        -builder: Builder
+        +construct() Product
+    }
+    class Builder {
+        <<abstract>>
+        +build_part_a()*
+        +build_part_b()*
+        +get_result()* Product
+    }
+    class ConcreteBuilder {
+        -product: Product
+        +build_part_a()
+        +build_part_b()
+        +get_result() Product
+    }
+    class Product {
+        -part_a
+        -part_b
+    }
+
+    Director --> Builder : uses
+    Builder <|-- ConcreteBuilder : implements
+    ConcreteBuilder --> Product : builds
+
+    note for Builder "In GoF the Builder is an abstract class\nwith mutable internal state and side-effectful\nbuild_part_* methods. Rust finds this awkward:\nshared mutable state across abstract methods\nfights the borrow checker."
