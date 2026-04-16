@@ -1,0 +1,12 @@
+%% Four Rust shapes for "Factory Method":
+flowchart TB
+    Q{What varies at runtime?}
+    Q -->|Nothing — just one type| NA["Just a fn `new(...)`<br/>or an associated fn"]
+    Q -->|The concrete type is chosen by a config value| EA["Enum + match<br/>`fn make(kind: Kind) -&gt; Box&lt;dyn Product&gt;`"]
+    Q -->|The caller picks a type statically| GA["Generic function or trait<br/>`fn make&lt;P: Product&gt;(...) -&gt; P`"]
+    Q -->|Caller supplies the constructor itself| CA["Pass a closure<br/>`fn make&lt;F: Fn() -&gt; P&gt;(ctor: F)`"]
+
+    style NA fill:#dcfce7,stroke:#166534
+    style EA fill:#dcfce7,stroke:#166534
+    style GA fill:#dcfce7,stroke:#166534
+    style CA fill:#dcfce7,stroke:#166534

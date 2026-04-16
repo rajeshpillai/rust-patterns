@@ -1,0 +1,25 @@
+%% The From/Into/TryFrom/TryInto quartet — the standard Rust
+%% conversion contract. Implement From, get Into for free.
+classDiagram
+    class From~T~ {
+        <<trait>>
+        +from(T) Self
+    }
+    class Into~T~ {
+        <<trait (blanket impl for any From)>>
+        +into(self) T
+    }
+    class TryFrom~T~ {
+        <<trait>>
+        +try_from(T) Result~Self, Err~
+    }
+    class TryInto~T~ {
+        <<trait (blanket for TryFrom)>>
+        +try_into(self) Result~T, Err~
+    }
+
+    From <.. Into : blanket impl: T: From&lt;U&gt; =&gt; U: Into&lt;T&gt;
+    TryFrom <.. TryInto : blanket impl
+
+    note for From "Never fails. Conversions that<br/>cannot fail use From.<br/>Examples: u32 -> u64, &str -> String"
+    note for TryFrom "May fail. Conversions that<br/>can surface an Err use TryFrom.<br/>Examples: i64 -> u32, &str -> EmailAddress"

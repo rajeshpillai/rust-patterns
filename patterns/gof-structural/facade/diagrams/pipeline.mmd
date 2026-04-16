@@ -1,0 +1,20 @@
+%% The Facade orchestrates the pipeline. Callers see one step; the
+%% facade runs N internal ones, handling errors and intermediate state.
+sequenceDiagram
+    participant Caller
+    participant F as ReportBuilder
+    participant L as Loader
+    participant P as Parser
+    participant V as Validator
+    participant R as Renderer
+
+    Caller->>F: generate("invoices.csv")
+    F->>L: load(path)
+    L-->>F: bytes
+    F->>P: parse(bytes)
+    P-->>F: records
+    F->>V: validate(records)
+    V-->>F: Ok(records)
+    F->>R: render(records)
+    R-->>F: pdf
+    F-->>Caller: Ok(pdf)

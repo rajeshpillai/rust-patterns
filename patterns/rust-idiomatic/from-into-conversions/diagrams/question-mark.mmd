@@ -1,0 +1,15 @@
+%% Why `?` Just Works when you implement From — the operator calls
+%% .into() on any Err it propagates.
+sequenceDiagram
+    autonumber
+    participant Caller as outer()
+    participant Inner as inner() -> Result<T, InnerError>
+
+    Caller->>Inner: inner()?
+    alt Ok
+        Inner-->>Caller: Ok(value) — bind, continue
+    else Err(e)
+        Inner-->>Caller: Err(InnerError)
+        Note right of Caller: ? calls From::from(e)<br/>via the compiler-inserted Into::into
+        Caller-->>Caller: return Err(OuterError::from(e))
+    end

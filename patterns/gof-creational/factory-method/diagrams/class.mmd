@@ -1,0 +1,33 @@
+%% Classical GoF Factory Method — a creator class exposes an abstract
+%% factory method that subclasses override to return the concrete
+%% Product type. In Rust the "creator class + subclass" hierarchy
+%% becomes a trait with an associated fn or a trait with an
+%% associated Product type.
+classDiagram
+    class Creator {
+        <<abstract>>
+        +create() Product
+        +doWork()
+    }
+    class Product {
+        <<interface>>
+        +perform()
+    }
+    class CsvCreator {
+        +create() CsvProduct
+    }
+    class JsonCreator {
+        +create() JsonProduct
+    }
+    class CsvProduct
+    class JsonProduct
+
+    Creator --> Product : creates
+    Creator <|-- CsvCreator
+    Creator <|-- JsonCreator
+    Product <|.. CsvProduct
+    Product <|.. JsonProduct
+    CsvCreator ..> CsvProduct
+    JsonCreator ..> JsonProduct
+
+    note for Creator "In Rust: a trait with\nan associated type Product\nand a fn create() -> Self::Product.\nNo abstract class needed."

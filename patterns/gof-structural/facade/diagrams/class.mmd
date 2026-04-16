@@ -1,0 +1,26 @@
+%% Facade — one small friendly type in front of a large messy subsystem.
+%% Callers use the facade; the subsystem's internals stay private.
+classDiagram
+    class Facade {
+        +high_level_op()
+        +another_op()
+    }
+    class Loader {
+        <<subsystem>>
+    }
+    class Parser {
+        <<subsystem>>
+    }
+    class Validator {
+        <<subsystem>>
+    }
+    class Compiler {
+        <<subsystem>>
+    }
+
+    Facade --> Loader : uses
+    Facade --> Parser : uses
+    Facade --> Validator : uses
+    Facade --> Compiler : uses
+
+    note for Facade "One coherent API surface.\nSubsystem types need not be `pub`.\nFacade OWNS the orchestration."

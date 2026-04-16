@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .good  { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .mid   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .bad   { fill: #fee2e2; stroke: #991b1b; stroke-width: 2; }
+    .arrow { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label { font-size: 13px; fill: #111827; }
+    .sub   { font-size: 11px; fill: #374151; }
+    .title { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis  { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono  { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">From / Into / TryFrom / TryInto — Rust's conversion contract</text>
+
+  <text x="20" y="60" class="axis">INFALLIBLE</text>
+  <rect x="20" y="80" width="320" height="70" rx="8" class="good"/>
+  <text x="180" y="106" text-anchor="middle" class="label">From&lt;U&gt; for T</text>
+  <text x="180" y="124" text-anchor="middle" class="mono">impl From&lt;u32&gt; for u64 { ... }</text>
+  <text x="180" y="142" text-anchor="middle" class="sub">and Into comes free via blanket impl</text>
+
+  <text x="380" y="60" class="axis">FALLIBLE</text>
+  <rect x="380" y="80" width="320" height="70" rx="8" class="mid"/>
+  <text x="540" y="106" text-anchor="middle" class="label">TryFrom&lt;U&gt; for T</text>
+  <text x="540" y="124" text-anchor="middle" class="mono">impl TryFrom&lt;i64&gt; for u32 { type Err = ... }</text>
+  <text x="540" y="142" text-anchor="middle" class="sub">TryInto comes free; surface errors via Result</text>
+
+  <text x="20" y="190" class="axis">WHY ? WORKS</text>
+  <rect x="20" y="208" width="680" height="70" rx="8" class="good"/>
+  <text x="40"  y="230" class="mono">let body = read_file(path)?;</text>
+  <text x="40"  y="248" class="sub">→ the compiler desugars ? to .into() on the Err,</text>
+  <text x="40"  y="264" class="sub">  so anywhere you impl From&lt;InnerError&gt; for OuterError, propagation is one character.</text>
+</svg>

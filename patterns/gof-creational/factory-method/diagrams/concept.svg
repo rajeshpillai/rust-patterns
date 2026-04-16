@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .good  { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .mid   { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .arrow { stroke: #374151; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .label { font-size: 13px; fill: #111827; }
+    .sub   { font-size: 11px; fill: #374151; }
+    .title { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis  { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono  { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="title">Factory Method — four shapes, pick by what varies</text>
+
+  <text x="20" y="60" class="axis">NOTHING VARIES — just one concrete type</text>
+  <rect x="20" y="78" width="680" height="40" rx="8" class="good"/>
+  <text x="360" y="103" text-anchor="middle" class="mono">impl Widget { pub fn new(label: &amp;str) -&gt; Self { ... } }</text>
+
+  <text x="20" y="140" class="axis">ENUM — concrete type chosen at runtime by a tag</text>
+  <rect x="20" y="158" width="680" height="40" rx="8" class="good"/>
+  <text x="360" y="183" text-anchor="middle" class="mono">fn make(kind: FormatKind) -&gt; Box&lt;dyn Formatter&gt; { match kind { ... } }</text>
+
+  <text x="20" y="220" class="axis">GENERIC — caller picks the type statically</text>
+  <rect x="20" y="238" width="680" height="40" rx="8" class="good"/>
+  <text x="360" y="263" text-anchor="middle" class="mono">fn make&lt;F: Format + Default&gt;() -&gt; F { F::default() }</text>
+
+  <text x="20" y="300" class="axis">CLOSURE — caller supplies the constructor</text>
+  <rect x="20" y="318" width="680" height="18" rx="8" class="good"/>
+  <text x="360" y="333" text-anchor="middle" class="mono">fn with_ctor&lt;F: Fn() -&gt; P, P&gt;(ctor: F) -&gt; P { ctor() }</text>
+</svg>
