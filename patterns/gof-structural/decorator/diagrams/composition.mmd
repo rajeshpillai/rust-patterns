@@ -1,0 +1,12 @@
+%% Decorators stack. Each one wraps the previous and forwards calls
+%% through its own logic. The order often matters: buffering outside
+%% a slow source; encryption inside a transport; logging closest to
+%% the underlying call.
+flowchart LR
+    File[File] --> Gz[GzipDecoder&lt;File&gt;]
+    Gz --> Buf[BufReader&lt;GzipDecoder&lt;File&gt;&gt;]
+    Buf --> Log[LoggingReader&lt;...&gt;]
+    Log --> App[App: read bytes]
+
+    note1["Each wrapper is generic over its inner type.<br/>Composition happens at compile time;<br/>the whole stack is monomorphized and inlined."]
+    Buf -.-> note1

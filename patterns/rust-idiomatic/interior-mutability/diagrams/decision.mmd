@@ -1,0 +1,20 @@
+%% Decision tree for interior-mutability primitives.
+%% Walk top-to-bottom; the first yes is the right tool.
+flowchart TD
+    Start{Do you genuinely need<br/>to mutate behind &self?}
+    Start -->|No| Skip["Use &mut self / ownership.<br/>You don't need interior mutability."]
+    Start -->|Yes| Multi{Shared across threads?}
+
+    Multi -->|No| Copy{Is T Copy?}
+    Copy -->|Yes| Cell[Cell&lt;T&gt;]
+    Copy -->|No| RefCell[RefCell&lt;T&gt;]
+
+    Multi -->|Yes| Once{Init once, then read-only?}
+    Once -->|Yes| OL[OnceLock&lt;T&gt;]
+    Once -->|No| Writers{Many readers, rare writes?}
+    Writers -->|Yes| RW[RwLock&lt;T&gt;]
+    Writers -->|No| Atomic{T is a single u32/u64/bool/ptr?}
+    Atomic -->|Yes| At[AtomicU64 / AtomicBool / AtomicPtr]
+    Atomic -->|No| Mu[Mutex&lt;T&gt;]
+
+    style Skip fill:#dcfce7,stroke:#166534

@@ -1,0 +1,18 @@
+%% The orphan rule: you can `impl Trait for Type` only if at least one
+%% of Trait or Type is defined in your crate. Adapter sidesteps it by
+%% wrapping the foreign type in a newtype you own.
+flowchart TB
+    subgraph theirs["someone else's crate"]
+        FT["trait Target"]
+        FY["struct Foreign"]
+    end
+    subgraph yours["your crate"]
+        YN["struct Wrapper(Foreign)"]
+        YI["impl Target for Wrapper"]
+        YN --> YI
+    end
+
+    BadX["impl Target for Foreign — E0117"]
+    BadX -.-> theirs
+
+    style BadX fill:#fee2e2,stroke:#991b1b

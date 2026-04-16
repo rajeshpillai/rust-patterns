@@ -1,0 +1,42 @@
+%% Interior mutability — mutate through a shared reference.
+%% Rust enforces aliasing-XOR-mutation normally; these types
+%% provide a checked or atomic escape, each with different
+%% guarantees and costs.
+classDiagram
+    class InteriorMut {
+        <<concept>>
+        borrow: &self
+        but can mutate internally
+    }
+    class Cell~T~ {
+        +get() T  (requires T: Copy)
+        +set(T)
+        +replace(T) T
+    }
+    class RefCell~T~ {
+        +borrow() Ref
+        +borrow_mut() RefMut
+        +try_borrow() Result
+        panics on aliasing violation
+    }
+    class Mutex~T~ {
+        +lock() LockResult
+        +try_lock() TryLockResult
+        Send + Sync
+    }
+    class RwLock~T~ {
+        +read() LockResult
+        +write() LockResult
+        many readers XOR one writer
+    }
+    class OnceCell~T~ {
+        +get() Option~&T~
+        +set(T) Result
+        initialize exactly once
+    }
+
+    InteriorMut <|.. Cell : single-thread, Copy only
+    InteriorMut <|.. RefCell : single-thread, runtime check
+    InteriorMut <|.. Mutex : multi-thread, blocking
+    InteriorMut <|.. RwLock : multi-thread, multi-reader
+    InteriorMut <|.. OnceCell : init once

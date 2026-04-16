@@ -1,0 +1,23 @@
+%% Adapter — reshape a Foreign API so it satisfies a Target trait.
+%% The GoF shape presents this as a wrapper class; in Rust, the
+%% wrapper is a newtype and the Target is a trait.
+classDiagram
+    class Target {
+        <<trait>>
+        +read_json() Result~Value, Error~
+    }
+    class Foreign {
+        <<foreign lib>>
+        +fetch_bytes() Vec~u8~
+        +decode() MyDoc
+    }
+    class ForeignAdapter {
+        -inner: Foreign
+        +new(Foreign) ForeignAdapter
+    }
+
+    Target   <|.. ForeignAdapter : impl (your code)
+    Foreign   <.. ForeignAdapter : wraps
+    Client    --> Target : uses
+
+    note for ForeignAdapter "Own the wrapper type so the\norphan rule is satisfied.\nImpl Target on ForeignAdapter,\nnot on Foreign directly."

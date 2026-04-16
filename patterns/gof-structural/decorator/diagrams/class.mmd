@@ -1,0 +1,36 @@
+%% Decorator — wrap a value, adding behavior while preserving the trait.
+%% Rust's Read/Write adapters are the canonical family: BufReader
+%% wraps any Read, Gzip wraps any Read, a Tee can wrap any Write, ...
+classDiagram
+    class Read {
+        <<trait>>
+        +read(&mut [u8]) Result~usize~
+    }
+    class File {
+        +read(&mut [u8])
+    }
+    class BufReader~R~ {
+        -inner: R
+        -buf: Vec~u8~
+        +read(&mut [u8])
+    }
+    class GzipDecoder~R~ {
+        -inner: R
+        +read(&mut [u8])
+    }
+    class Tee~R~ {
+        -inner: R
+        -sink: Sink
+        +read(&mut [u8])
+    }
+
+    Read <|.. File
+    Read <|.. BufReader
+    Read <|.. GzipDecoder
+    Read <|.. Tee
+
+    BufReader --> Read : generic over R
+    GzipDecoder --> Read : generic over R
+    Tee --> Read : generic over R
+
+    note for BufReader "Decorators compose:\nBufReader&lt;GzipDecoder&lt;File&gt;&gt;\nis buffered decompression.\nGeneric over the inner type —\nzero vtable, fully inlined."

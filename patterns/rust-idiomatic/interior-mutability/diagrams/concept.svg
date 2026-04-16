@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" font-family="ui-sans-serif, system-ui, sans-serif">
+  <style>
+    .good   { fill: #dcfce7; stroke: #166534; stroke-width: 2; }
+    .mid    { fill: #fef3c7; stroke: #92400e; stroke-width: 2; }
+    .bad    { fill: #fee2e2; stroke: #991b1b; stroke-width: 2; }
+    .label  { font-size: 13px; fill: #111827; }
+    .sub    { font-size: 11px; fill: #374151; }
+    .title  { font-size: 15px; font-weight: 600; fill: #111827; }
+    .axis   { font-size: 11px; font-weight: 600; fill: #6b7280; letter-spacing: .05em; }
+    .mono   { font-family: ui-monospace, monospace; font-size: 11px; fill: #1e3a8a; }
+  </style>
+
+  <text x="20" y="26" class="title">Interior mutability — pick by scope AND by cost</text>
+
+  <text x="20"  y="60" class="axis">SINGLE-THREADED</text>
+  <rect x="20"  y="80" width="330" height="90" rx="8" class="good"/>
+  <text x="185" y="106" text-anchor="middle" class="label">Cell&lt;T&gt; (T: Copy)</text>
+  <text x="185" y="124" text-anchor="middle" class="mono">.get() / .set(v) / .replace(v)</text>
+  <text x="185" y="144" text-anchor="middle" class="sub">no runtime check · just move Copy values in/out</text>
+  <text x="185" y="162" text-anchor="middle" class="sub">cannot borrow the inner value</text>
+
+  <text x="370" y="60" class="axis">SINGLE-THREADED, NON-COPY</text>
+  <rect x="370" y="80" width="330" height="90" rx="8" class="mid"/>
+  <text x="535" y="106" text-anchor="middle" class="label">RefCell&lt;T&gt;</text>
+  <text x="535" y="124" text-anchor="middle" class="mono">.borrow() / .borrow_mut()</text>
+  <text x="535" y="144" text-anchor="middle" class="sub">runtime aliasing check · panics on violation</text>
+  <text x="535" y="162" text-anchor="middle" class="sub">use when you must lend the inner value</text>
+
+  <text x="20"  y="200" class="axis">MULTI-THREADED, GENERAL</text>
+  <rect x="20"  y="220" width="330" height="90" rx="8" class="mid"/>
+  <text x="185" y="246" text-anchor="middle" class="label">Mutex&lt;T&gt; / RwLock&lt;T&gt;</text>
+  <text x="185" y="264" text-anchor="middle" class="mono">.lock() / .read() / .write()</text>
+  <text x="185" y="284" text-anchor="middle" class="sub">blocks on contention · poisoning on panic</text>
+  <text x="185" y="302" text-anchor="middle" class="sub">RwLock = many readers XOR one writer</text>
+
+  <text x="370" y="200" class="axis">MULTI-THREADED, SPECIAL CASES</text>
+  <rect x="370" y="220" width="330" height="90" rx="8" class="good"/>
+  <text x="535" y="246" text-anchor="middle" class="label">OnceLock&lt;T&gt; · AtomicU64 · AtomicBool</text>
+  <text x="535" y="264" text-anchor="middle" class="mono">.get_or_init / .load / .store / fetch_add</text>
+  <text x="535" y="284" text-anchor="middle" class="sub">lock-free, non-blocking</text>
+  <text x="535" y="302" text-anchor="middle" class="sub">only for init-once or single-word atomic data</text>
+
+  <text x="20"  y="346" class="sub">Rule of thumb: reach for interior mutability LAST, not first. &amp;mut self + ownership handles most cases.</text>
+</svg>
